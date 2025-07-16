@@ -27,14 +27,14 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
 }
 
 .form-group.horizontal {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .form-group.horizontal label {

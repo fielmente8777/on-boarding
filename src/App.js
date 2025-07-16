@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './App.css'
+import './App.css';
+import { propertyFields } from './PropertyFields';
 
 const defaultFormData = {
   propertyDetails: {
@@ -17,16 +18,26 @@ const defaultFormData = {
     'Alcohol Served onsite': '', 'Stag/ bachelor and hen/ bachelorette parties': '', 'Extra bed Charges (Adult)': '',
     'Extra bed Charges (Child)': '', 'Cancellation Policy': ''
   },
-  rooms: [],
-  competitionHotels: [],
-  importantContacts: [],
-  transfers: [],
-  touristInterest: [],
-  cardsAccepted: [],
-  roomFacilities: [],
-  ratePlans: [],
-  fbOptions: []
+  rooms: [{
+    'Room Name': '', 'Room Type': '', 'Maximum Occupancy': '', 'Total Inventory': '',
+    'Area size (sq.ft)': '', 'Bed Type': '', 'Connecting/Adjoining Rooms': '', 'Balcony': '',
+    'Windows': '', 'Room View': ''
+  }],
+  competitionHotels: [''],
+  importantContacts: [{ name: '', phone: '', email: '' }],
+  transfers: [{ model: '', pickup: '', chargeable: 'No', oneWay: '', twoWay: '' }],
+  touristInterest: [''],
+  cardsAccepted: [{ cardType: '', accepted: 'No' }],
+  roomFacilities: [{ name: '', available: 'No', complimentary: 'No' }],
+  ratePlans: [{
+    'Rate Plan Name': '', 'Rate Plan Type': '', 'Linked Plan': '', 'Linked to': '',
+    'Sgl Rate': '', 'Dbl Rate': '', 'Rooms Applicable': '', 'Inclusions': '',
+    'Minimum length of stay': '', 'Maximum length of stay': '', 'Lead Time': '',
+    'Cancellation Policy': '', 'Members only deal': ''
+  }],
+  fbOptions: [{ name: '', cuisine: '', type: '', timings: '', meals: '' }]
 };
+
 
 const amenitiesList = ["Outdoor Swimming Pool", "Lawns/Gardens", "Business Center", "Conference Hall", "Internet Facility", "Restaurant",
   "Barbeque Grill's", "Parking Facility", "Self Parking", "Airport Shuttle Service Available",
@@ -158,30 +169,78 @@ const App = () => {
   const renderStepSection = () => {
     switch (currentStep.key) {
       case 'propertyDetails':
-        return Object.keys(formData.propertyDetails).map((field, idx) => (
-          <div key={idx} className="form-group">
-            <label>{field}</label>
-            <input
-              type="text"
-              value={formData.propertyDetails[field]}
-              onChange={(e) => handleChange('propertyDetails', field, e.target.value)}
-            />
+        return (
+          <div className="max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-md">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Property Details</h2>
+            <div className="grid grid-cols-2 gap-6">
+              {propertyFields.map((field, idx) => {
+                if (field.group) {
+                  return (
+                    <div key={idx} className="col-span-2">
+                      <h3 className="text-xl font-semibold text-gray-700 mb-2">{field.group}</h3>
+                    </div>
+                  );
+                }
+
+                const value = formData.propertyDetails[field.key] || '';
+
+                return (
+                  <div key={idx} className="flex flex-col space-y-2">
+                    <label className="text-gray-700 font-medium">{field.label}</label>
+
+                    {field.type === 'textarea' ? (
+                      <textarea
+                        rows={4}
+                        value={value}
+                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
+                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      />
+                    ) : field.type === 'select' ? (
+                      <select
+                        value={value}
+                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
+                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      >
+                        <option value="">Select</option>
+                        {field.options.map((opt) => (
+                          <option key={opt} value={opt}>{opt} Star</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        step={field.step || undefined}
+                        value={value}
+                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
+                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        ));
+        );
+
 
       case 'amenities':
-        return amenitiesList.map((amenity, idx) => (
-          <div key={idx} className="form-group horizontal">
-            <label>{amenity}</label>
-            <select
-              value={formData.amenities[amenity]}
-              onChange={(e) => handleChange('amenities', amenity, e.target.value)}
-            >
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
+        return (
+          <div className='grid grid-cols-2 gap-5'>
+            {amenitiesList.map((amenity, idx) => (
+              <div key={idx} className="form-group horizontal">
+
+                <label className='!text-start'>{amenity}</label>
+                <select
+                  value={formData.amenities[amenity]}
+                  onChange={(e) => handleChange('amenities', amenity, e.target.value)}
+                >
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+            ))}
           </div>
-        ));
+        )
 
       case 'policies':
         return Object.keys(formData.policies).map((field, idx) => (
@@ -562,36 +621,44 @@ const App = () => {
     }
   };
   return (
-    <div className="onboarding-form">
-      <h1>Hotel Onboarding Form</h1>
 
-      {/* Step Navigation Bar */}
-      <div className="step-nav">
-        {steps.map((step, index) => (
-          <div
-            key={step.key}
-            className={`step-nav-item ${index === currentStepIndex ? 'active' : ''} ${completedSteps.includes(step.key) ? 'completed' : ''}`}
-            onClick={() => setCurrentStepIndex(index)}
-          >
-            {step.label}
-          </div>
-        ))}
-      </div>
+    <div className='max-w-[1424px] mx-auto mt-10'>
+      {/* <h1 className='text-3xl font-bold mb-4'>Hotel Onboarding Form</h1> */}
+      <div className='grid grid-cols-4  gap-10'>
 
-      {/* Step Content */}
-      <form onSubmit={(e) => e.preventDefault()}>
-        {renderStepSection()}
 
-        <div style={{ marginTop: '1rem' }}>
-          <button type="button" onClick={saveStepData} className="submit-btn">Save & Next</button>
-          {currentStepIndex < steps.length - 1 && (
-            <button type="button" onClick={goToNextStep} className="submit-btn" style={{ marginLeft: '10px' }}>
-              Next
-            </button>
-          )}
+        {/* Step Navigation Bar */}
+        <div className=" flex flex-col gap-2">
+
+          {steps.map((step, index) => (
+            <div
+              key={step.key}
+              className={`step-nav-item ${index === currentStepIndex ? 'active' : ''} ${completedSteps.includes(step.key) ? 'completed' : ''}`}
+              onClick={() => setCurrentStepIndex(index)}
+            >
+              {step.label}
+            </div>
+          ))}
+
         </div>
-      </form>
+
+        {/* Step Content */}
+        <form className='col-span-3' onSubmit={(e) => e.preventDefault()}>
+          <h1 className='text-2xl mb-2 font-semibold'>{steps[currentStepIndex].label}</h1>
+          {renderStepSection()}
+
+          <div style={{ marginTop: '1rem' }}>
+            <button type="button" onClick={saveStepData} className="submit-btn">Save & Next</button>
+            {currentStepIndex < steps.length - 1 && (
+              <button type="button" onClick={goToNextStep} className="submit-btn" style={{ marginLeft: '10px' }}>
+                Next
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
     </div>
+
   );
 };
 
