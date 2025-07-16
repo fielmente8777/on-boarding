@@ -1,77 +1,116 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import { propertyFields } from './PropertyFields';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import { propertyFields } from "./PropertyFields";
+import PropertyDetails from "./components/PropertyDetails";
+import Amenities from "./components/Amenities";
+import Policies from "./components/Policies";
+import RoomOverview from "./components/RoomOverview";
+import CompitionHotels from "./components/CompitionHotels";
+import ImportantContacts from "./components/ImportantContacts";
+import Transfers from "./components/Transfers";
+import TouristInterest from "./components/TouristInterest";
 
-const defaultFormData = {
+export const defaultFormData = {
   propertyDetails: {
-    'Hotel Name': '', 'Address': '', 'Locality & Pincode': '', 'Distance from International Airport': '',
-    'Distance from Domestic Airport': '', 'Distance from Railway Station': '', 'Hotel Website': '',
-    'Year Built': '', 'Recent Renovation Year': '', 'Latitude': '', 'Longitude': '', 'Star Category': '',
-    'Nearest Public Transport & Distance from hotel': '', 'Type of Accomodation': '', 'Hotel Description': ''
+    "Hotel Name": "",
+    Address: "",
+    "Locality & Pincode": "",
+    "Distance from International Airport": "",
+    "Distance from Domestic Airport": "",
+    "Distance from Railway Station": "",
+    "Hotel Website": "",
+    "Year Built": "",
+    "Recent Renovation Year": "",
+    Latitude: "",
+    Longitude: "",
+    "Star Category": "",
+    "Nearest Public Transport & Distance from hotel": "",
+    "Type of Accomodation": "",
+    "Hotel Description": "",
   },
   amenities: {},
   policies: {
-    '24 hrs Check-In': 'No', '24 hrs Check-Out': 'No', 'Standard Check-In Time': '', 'Standard Check-Out Time': '',
-    'Early Check-In': '', 'Late Check-Out': '', 'Visitors Allowed': '', 'Pets Allowed': '',
-    'Children allowed in hotel': '', 'Complimentary stay for children until age of 6': '',
-    'Extra bed required from age of': '', 'Minimum age of Check-in': '', 'Alcohol allowed onsite': '',
-    'Alcohol Served onsite': '', 'Stag/ bachelor and hen/ bachelorette parties': '', 'Extra bed Charges (Adult)': '',
-    'Extra bed Charges (Child)': '', 'Cancellation Policy': ''
+    "24 hrs Check-In": "No",
+    "24 hrs Check-Out": "No",
+    "Standard Check-In Time": "",
+    "Standard Check-Out Time": "",
+    "Early Check-In": "",
+    "Late Check-Out": "",
+    "Visitors Allowed": "",
+    "Pets Allowed": "",
+    "Children allowed in hotel": "",
+    "Complimentary stay for children until age of 6": "",
+    "Extra bed required from age of": "",
+    "Minimum age of Check-in": "",
+    "Alcohol allowed onsite": "",
+    "Alcohol Served onsite": "",
+    "Stag/ bachelor and hen/ bachelorette parties": "",
+    "Extra bed Charges (Adult)": "",
+    "Extra bed Charges (Child)": "",
+    "Cancellation Policy": "",
   },
-  rooms: [{
-    'Room Name': '', 'Room Type': '', 'Maximum Occupancy': '', 'Total Inventory': '',
-    'Area size (sq.ft)': '', 'Bed Type': '', 'Connecting/Adjoining Rooms': '', 'Balcony': '',
-    'Windows': '', 'Room View': ''
-  }],
-  competitionHotels: [''],
-  importantContacts: [{ name: '', phone: '', email: '' }],
-  transfers: [{ model: '', pickup: '', chargeable: 'No', oneWay: '', twoWay: '' }],
-  touristInterest: [''],
-  cardsAccepted: [{ cardType: '', accepted: 'No' }],
-  roomFacilities: [{ name: '', available: 'No', complimentary: 'No' }],
-  ratePlans: [{
-    'Rate Plan Name': '', 'Rate Plan Type': '', 'Linked Plan': '', 'Linked to': '',
-    'Sgl Rate': '', 'Dbl Rate': '', 'Rooms Applicable': '', 'Inclusions': '',
-    'Minimum length of stay': '', 'Maximum length of stay': '', 'Lead Time': '',
-    'Cancellation Policy': '', 'Members only deal': ''
-  }],
-  fbOptions: [{ name: '', cuisine: '', type: '', timings: '', meals: '' }]
+  rooms: [
+    {
+      "Room Name": "",
+      "Room Type": "",
+      "Maximum Occupancy": "",
+      "Total Inventory": "",
+      "Area size (sq.ft)": "",
+      "Bed Type": "",
+      "Connecting/Adjoining Rooms": "",
+      Balcony: "",
+      Windows: "",
+      "Room View": "",
+    },
+  ],
+  competitionHotels: [""],
+  importantContacts: [{ name: "", phone: "", email: "" }],
+  transfers: [
+    { model: "", pickup: "", chargeable: "No", oneWay: "", twoWay: "" },
+  ],
+  touristInterest: [""],
+  cardsAccepted: [{ cardType: "", accepted: "No" }],
+  roomFacilities: [{ name: "", available: "No", complimentary: "No" }],
+  ratePlans: [
+    {
+      "Rate Plan Name": "",
+      "Rate Plan Type": "",
+      "Linked Plan": "",
+      "Linked to": "",
+      "Sgl Rate": "",
+      "Dbl Rate": "",
+      "Rooms Applicable": "",
+      Inclusions: "",
+      "Minimum length of stay": "",
+      "Maximum length of stay": "",
+      "Lead Time": "",
+      "Cancellation Policy": "",
+      "Members only deal": "",
+    },
+  ],
+  fbOptions: [{ name: "", cuisine: "", type: "", timings: "", meals: "" }],
 };
 
-
-const amenitiesList = ["Outdoor Swimming Pool", "Lawns/Gardens", "Business Center", "Conference Hall", "Internet Facility", "Restaurant",
-  "Barbeque Grill's", "Parking Facility", "Self Parking", "Airport Shuttle Service Available",
-  "Railway Shuttle Service Available", "Indoor pool", "Bicycles", "Safari", "Dry Cleaning", "Laundry Service",
-  "Luggage Storage", "Babysitting or Childcare", "Fireplace in Lobby", "Smoke-free Property", "Doctor on Call",
-  "Designated Smoking Areas", "ATM/Banking", "Beauty Salon", "Safe Deposit Box At Front Desk", "Hair Dresser",
-  "Use of nearby fitness center", "Sauna", "Playground on site", "Golf course in house", "Currency Exchange",
-  "Porter/bellhop", "Gift Shops", "Tour/Tickets Assistance", "Nightclub", "Picnic Area", "Terrace", "Library",
-  "Gaming Zone", "Access to nearby outdoor pool", "Hiking/ Biking trails", "Golf course nearby", "Meeting Rooms",
-  "Wedding Facility", "Access to nearby health club", "Children's pool", "Spa hot tub", "Tennis on site",
-  "Health club/ Fitness facility", "Gym", "Children's club", "Yoga", "Mountain biking", "Elevator", "Indore Games",
-  "Bar", "Express Check In", "Concierge", "Daily Newspaper In lobby"];
-amenitiesList.forEach(a => defaultFormData.amenities[a] = 'No');
-
 const steps = [
-  { key: 'propertyDetails', label: 'Property Details' },
-  { key: 'amenities', label: 'Amenities' },
-  { key: 'policies', label: 'Policies' },
-  { key: 'rooms', label: 'Room Overview' },
-  { key: 'competitionHotels', label: 'Competition Hotels' },
-  { key: 'importantContacts', label: 'Important Contacts' },
-  { key: 'transfers', label: 'Transfers' },
-  { key: 'touristInterest', label: 'Tourist Interest' },
-  { key: 'cardsAccepted', label: 'Cards Accepted' },
-  { key: 'roomFacilities', label: 'Room Facilities' },
-  { key: 'ratePlans', label: 'Rate Plans' },
-  { key: 'fbOptions', label: 'F&B Options' }
+  { key: "propertyDetails", label: "Property Details", isDisabled: false },
+  { key: "amenities", label: "Amenities", isDisabled: true },
+  { key: "policies", label: "Policies", isDisabled: true },
+  { key: "rooms", label: "Room Overview", isDisabled: true },
+  { key: "competitionHotels", label: "Competition Hotels", isDisabled: true },
+  { key: "importantContacts", label: "Important Contacts", isDisabled: true },
+  { key: "transfers", label: "Transfers", isDisabled: true },
+  { key: "touristInterest", label: "Tourist Interest", isDisabled: true },
+  { key: "cardsAccepted", label: "Cards Accepted", isDisabled: true },
+  { key: "roomFacilities", label: "Room Facilities", isDisabled: true },
+  { key: "ratePlans", label: "Rate Plans", isDisabled: true },
+  { key: "fbOptions", label: "F&B Options", isDisabled: true },
 ];
 
 const App = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [completedSteps, setCompletedSteps] = useState(() => {
-    const saved = localStorage.getItem('completedSteps');
+    const saved = localStorage.getItem("completedSteps");
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -86,14 +125,13 @@ const App = () => {
     setFormData(savedData);
   }, []);
 
-
   const handleChange = (section, field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: value
-      }
+        [field]: value,
+      },
     }));
   };
 
@@ -101,52 +139,82 @@ const App = () => {
     const updatedArray = [...formData[section]];
     updatedArray[index] = {
       ...updatedArray[index],
-      [field]: value
+      [field]: value,
     };
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [section]: updatedArray
+      [section]: updatedArray,
     }));
   };
   const removeItem = (section, index) => {
     const updatedArray = formData[section].filter((_, i) => i !== index);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [section]: updatedArray
+      [section]: updatedArray,
     }));
   };
 
   const addItem = (section) => {
     let newItem = {};
     switch (section) {
-      case 'rooms':
+      case "rooms":
         newItem = {
-          'Room Name': '', 'Room Type': '', 'Maximum Occupancy': '', 'Total Inventory': '',
-          'Area size (sq.ft)': '', 'Bed Type': '', 'Connecting/Adjoining Rooms': '', 'Balcony': '',
-          'Windows': '', 'Room View': ''
-        }; break;
-      case 'importantContacts':
-        newItem = { name: '', phone: '', email: '' }; break;
-      case 'transfers':
-        newItem = { model: '', pickup: '', chargeable: 'No', oneWay: '', twoWay: '' }; break;
-      case 'cardsAccepted':
-        newItem = { cardType: '', accepted: 'No' }; break;
-      case 'roomFacilities':
-        newItem = { name: '', available: 'No', complimentary: 'No' }; break;
-      case 'ratePlans':
+          "Room Name": "",
+          "Room Type": "",
+          "Maximum Occupancy": "",
+          "Total Inventory": "",
+          "Area size (sq.ft)": "",
+          "Bed Type": "",
+          "Connecting/Adjoining Rooms": "",
+          Balcony: "",
+          Windows: "",
+          "Room View": "",
+        };
+        break;
+      case "importantContacts":
+        newItem = { name: "", phone: "", email: "" };
+        break;
+      case "transfers":
         newItem = {
-          'Rate Plan Name': '', 'Rate Plan Type': '', 'Linked Plan': '', 'Linked to': '',
-          'Sgl Rate': '', 'Dbl Rate': '', 'Rooms Applicable': '', 'Inclusions': '',
-          'Minimum length of stay': '', 'Maximum length of stay': '', 'Lead Time': '',
-          'Cancellation Policy': '', 'Members only deal': ''
-        }; break;
-      case 'fbOptions':
-        newItem = { name: '', cuisine: '', type: '', timings: '', meals: '' }; break;
-      default: newItem = {};
+          model: "",
+          pickup: "",
+          chargeable: "No",
+          oneWay: "",
+          twoWay: "",
+        };
+        break;
+      case "cardsAccepted":
+        newItem = { cardType: "", accepted: "No" };
+        break;
+      case "roomFacilities":
+        newItem = { name: "", available: "No", complimentary: "No" };
+        break;
+      case "ratePlans":
+        newItem = {
+          "Rate Plan Name": "",
+          "Rate Plan Type": "",
+          "Linked Plan": "",
+          "Linked to": "",
+          "Sgl Rate": "",
+          "Dbl Rate": "",
+          "Rooms Applicable": "",
+          Inclusions: "",
+          "Minimum length of stay": "",
+          "Maximum length of stay": "",
+          "Lead Time": "",
+          "Cancellation Policy": "",
+          "Members only deal": "",
+        };
+        break;
+      case "fbOptions":
+        newItem = { name: "", cuisine: "", type: "", timings: "", meals: "" };
+        break;
+      default:
+        newItem = {};
     }
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [section]: [...prev[section], newItem]
+      [section]: [...prev[section], newItem],
     }));
   };
 
@@ -156,7 +224,7 @@ const App = () => {
     if (!completedSteps.includes(key)) {
       const updated = [...completedSteps, key];
       setCompletedSteps(updated);
-      localStorage.setItem('completedSteps', JSON.stringify(updated));
+      localStorage.setItem("completedSteps", JSON.stringify(updated));
     }
     alert(`${currentStep.label} saved.`);
   };
@@ -168,319 +236,31 @@ const App = () => {
   };
   const renderStepSection = () => {
     switch (currentStep.key) {
-      case 'propertyDetails':
-        return (
-          <div className="max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-md">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Property Details</h2>
-            <div className="grid grid-cols-2 gap-6">
-              {propertyFields.map((field, idx) => {
-                if (field.group) {
-                  return (
-                    <div key={idx} className="col-span-2">
-                      <h3 className="text-xl font-semibold text-gray-700 mb-2">{field.group}</h3>
-                    </div>
-                  );
-                }
+      case "propertyDetails":
+        return <PropertyDetails />;
 
-                const value = formData.propertyDetails[field.key] || '';
+      case "amenities":
+        return <Amenities />;
 
-                return (
-                  <div key={idx} className="flex flex-col space-y-2">
-                    <label className="text-gray-700 font-medium">{field.label}</label>
+      case "policies":
+        return <Policies />;
 
-                    {field.type === 'textarea' ? (
-                      <textarea
-                        rows={4}
-                        value={value}
-                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
-                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      />
-                    ) : field.type === 'select' ? (
-                      <select
-                        value={value}
-                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
-                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      >
-                        <option value="">Select</option>
-                        {field.options.map((opt) => (
-                          <option key={opt} value={opt}>{opt} Star</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        type={field.type}
-                        step={field.step || undefined}
-                        value={value}
-                        onChange={(e) => handleChange('propertyDetails', field.key, e.target.value)}
-                        className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
+      case "rooms":
+        return <RoomOverview />;
 
+      case "competitionHotels":
+        return <CompitionHotels />;
 
-      case 'amenities':
-        return (
-          <div className='grid grid-cols-2 gap-5'>
-            {amenitiesList.map((amenity, idx) => (
-              <div key={idx} className="form-group horizontal">
+      case "importantContacts":
+        return <ImportantContacts />;
 
-                <label className='!text-start'>{amenity}</label>
-                <select
-                  value={formData.amenities[amenity]}
-                  onChange={(e) => handleChange('amenities', amenity, e.target.value)}
-                >
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-            ))}
-          </div>
-        )
+      case "transfers":
+        return <Transfers />;
 
-      case 'policies':
-        return Object.keys(formData.policies).map((field, idx) => (
-          <div key={idx} className="form-group">
-            <label>{field}</label>
-            <input
-              type="text"
-              value={formData.policies[field]}
-              onChange={(e) => handleChange('policies', field, e.target.value)}
-            />
-          </div>
-        ));
+      case "touristInterest":
+        return <TouristInterest />;
 
-      case 'rooms':
-        return (
-          <>
-            {formData.rooms.map((room, idx) => (
-              <div key={idx} className="room-entry" style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3>Room {idx + 1}</h3>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => removeItem('rooms', idx)}
-                    style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}
-                  >
-                    Delete
-                  </button>
-                </div>
-                {Object.keys(room).map((field, fidx) => (
-                  <div key={fidx} className="form-group">
-                    <label>{field}</label>
-                    <input
-                      type="text"
-                      value={room[field]}
-                      onChange={(e) => handleArrayChange('rooms', idx, field, e.target.value)}
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
-            <button type="button" className="add-btn" onClick={() => addItem('rooms')}>+ Add Room</button>
-          </>
-        );
-
-
-      case 'competitionHotels':
-        return (
-          <>
-            {formData.competitionHotels.map((hotel, idx) => (
-              <div
-                key={idx}
-                className="form-group"
-                style={{
-                  border: '1px solid #ccc',
-                  padding: '1rem',
-                  marginBottom: '1rem',
-                  borderRadius: '6px',
-                  backgroundColor: '#f9f9f9'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h4 style={{ margin: 0 }}>Hotel {idx + 1}</h4>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => removeItem('competitionHotels', idx)}
-                  >
-                    Delete
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  value={hotel}
-                  onChange={(e) => {
-                    const updated = [...formData.competitionHotels];
-                    updated[idx] = e.target.value;
-                    setFormData(prev => ({ ...prev, competitionHotels: updated }));
-                  }}
-                  placeholder="Hotel name"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              className="add-btn"
-              onClick={() => setFormData(prev => ({
-                ...prev,
-                competitionHotels: [...prev.competitionHotels, '']
-              }))}
-            >
-              + Add Hotel
-            </button>
-          </>
-        );
-
-
-      case 'importantContacts':
-        return (
-          <>
-            {formData.importantContacts.map((contact, idx) => (
-              <div
-                key={idx}
-                className="form-group"
-                style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3>Contact {idx + 1}</h3>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => removeItem('importantContacts', idx)}
-                    style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}
-                  >
-                    Delete
-                  </button>
-                </div>
-                <label>Name</label>
-                <input
-                  type="text"
-                  value={contact.name}
-                  onChange={(e) => handleArrayChange('importantContacts', idx, 'name', e.target.value)}
-                />
-                <label>Phone</label>
-                <input
-                  type="text"
-                  value={contact.phone}
-                  onChange={(e) => handleArrayChange('importantContacts', idx, 'phone', e.target.value)}
-                />
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={contact.email}
-                  onChange={(e) => handleArrayChange('importantContacts', idx, 'email', e.target.value)}
-                />
-              </div>
-            ))}
-            <button type="button" className="add-btn" onClick={() => addItem('importantContacts')}>
-              + Add Contact
-            </button>
-          </>
-        );
-
-
-      case 'transfers':
-        return (
-          <>
-            {formData.transfers.map((t, idx) => (
-              <div
-                key={idx}
-                className="form-group"
-                style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h3>Transfer {idx + 1}</h3>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => removeItem('transfers', idx)}
-                    style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '4px', cursor: 'pointer' }}
-                  >
-                    Delete
-                  </button>
-                </div>
-
-                <label>Model</label>
-                <input type="text" value={t.model} onChange={(e) => handleArrayChange('transfers', idx, 'model', e.target.value)} />
-
-                <label>Pickup</label>
-                <input type="text" value={t.pickup} onChange={(e) => handleArrayChange('transfers', idx, 'pickup', e.target.value)} />
-
-                <label>Chargeable</label>
-                <select value={t.chargeable} onChange={(e) => handleArrayChange('transfers', idx, 'chargeable', e.target.value)}>
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-
-                <label>One Way</label>
-                <input type="text" value={t.oneWay} onChange={(e) => handleArrayChange('transfers', idx, 'oneWay', e.target.value)} />
-
-                <label>Two Way</label>
-                <input type="text" value={t.twoWay} onChange={(e) => handleArrayChange('transfers', idx, 'twoWay', e.target.value)} />
-              </div>
-            ))}
-            <button type="button" className="add-btn" onClick={() => addItem('transfers')}>+ Add Transfer</button>
-          </>
-        );
-
-      case 'touristInterest':
-        return (
-          <>
-            {formData.touristInterest.map((place, idx) => (
-              <div
-                key={idx}
-                className="form-group"
-                style={{
-                  border: '1px solid #ccc',
-                  padding: '1rem',
-                  marginBottom: '1rem',
-                  borderRadius: '6px',
-                  backgroundColor: '#f9f9f9'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <h4 style={{ margin: 0 }}>Place {idx + 1}</h4>
-                  <button
-                    type="button"
-                    className="delete-btn"
-                    onClick={() => removeItem('touristInterest', idx)}
-                  >
-                    Delete
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  value={place}
-                  onChange={(e) => {
-                    const updated = [...formData.touristInterest];
-                    updated[idx] = e.target.value;
-                    setFormData(prev => ({ ...prev, touristInterest: updated }));
-                  }}
-                  placeholder="e.g., India Gate, Connaught Place"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              className="add-btn"
-              onClick={() => setFormData(prev => ({
-                ...prev,
-                touristInterest: [...prev.touristInterest, '']
-              }))}
-            >
-              + Add Tourist Place
-            </button>
-          </>
-        );
-
-
-      case 'cardsAccepted':
+      case "cardsAccepted":
         return (
           <>
             {formData.cardsAccepted.map((card, idx) => (
@@ -488,16 +268,27 @@ const App = () => {
                 key={idx}
                 className="form-group"
                 style={{
-                  border: '1px solid #ccc',
-                  padding: '1rem',
-                  marginBottom: '1rem',
-                  borderRadius: '6px',
-                  backgroundColor: '#f9f9f9'
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                  borderRadius: "6px",
+                  backgroundColor: "#f9f9f9",
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "0.75rem",
+                  }}
+                >
                   <h4 style={{ margin: 0 }}>Card {idx + 1}</h4>
-                  <button type="button" className="delete-btn" onClick={() => removeItem('cardsAccepted', idx)}>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeItem("cardsAccepted", idx)}
+                  >
                     Delete
                   </button>
                 </div>
@@ -507,13 +298,27 @@ const App = () => {
                   <input
                     type="text"
                     value={card.cardType}
-                    onChange={(e) => handleArrayChange('cardsAccepted', idx, 'cardType', e.target.value)}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        "cardsAccepted",
+                        idx,
+                        "cardType",
+                        e.target.value
+                      )
+                    }
                   />
 
                   <label>Accepted</label>
                   <select
                     value={card.accepted}
-                    onChange={(e) => handleArrayChange('cardsAccepted', idx, 'accepted', e.target.value)}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        "cardsAccepted",
+                        idx,
+                        "accepted",
+                        e.target.value
+                      )
+                    }
                   >
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
@@ -521,31 +326,70 @@ const App = () => {
                 </div>
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={() => addItem('cardsAccepted')}>+ Add Card</button>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => addItem("cardsAccepted")}
+            >
+              + Add Card
+            </button>
           </>
         );
 
-
-
-      case 'roomFacilities':
+      case "roomFacilities":
         return (
           <>
             {formData.roomFacilities.map((facility, idx) => (
-              <div key={idx} className="form-group" style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                key={idx}
+                className="form-group"
+                style={{
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                  borderRadius: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <h4>Facility {idx + 1}</h4>
-                  <button type="button" className="delete-btn" onClick={() => removeItem('roomFacilities', idx)}>Delete</button>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeItem("roomFacilities", idx)}
+                  >
+                    Delete
+                  </button>
                 </div>
                 <label>Facility</label>
                 <input
                   type="text"
                   value={facility.name}
-                  onChange={(e) => handleArrayChange('roomFacilities', idx, 'name', e.target.value)}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "roomFacilities",
+                      idx,
+                      "name",
+                      e.target.value
+                    )
+                  }
                 />
                 <label>Availability</label>
                 <select
                   value={facility.available}
-                  onChange={(e) => handleArrayChange('roomFacilities', idx, 'available', e.target.value)}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "roomFacilities",
+                      idx,
+                      "available",
+                      e.target.value
+                    )
+                  }
                 >
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
@@ -553,26 +397,59 @@ const App = () => {
                 <label>Complimentary</label>
                 <select
                   value={facility.complimentary}
-                  onChange={(e) => handleArrayChange('roomFacilities', idx, 'complimentary', e.target.value)}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "roomFacilities",
+                      idx,
+                      "complimentary",
+                      e.target.value
+                    )
+                  }
                 >
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={() => addItem('roomFacilities')}>+ Add Facility</button>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => addItem("roomFacilities")}
+            >
+              + Add Facility
+            </button>
           </>
         );
 
-
-      case 'ratePlans':
+      case "ratePlans":
         return (
           <>
             {formData.ratePlans.map((plan, idx) => (
-              <div key={idx} className="form-group" style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                key={idx}
+                className="form-group"
+                style={{
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                  borderRadius: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <h4>Rate Plan {idx + 1}</h4>
-                  <button type="button" className="delete-btn" onClick={() => removeItem('ratePlans', idx)}>Delete</button>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeItem("ratePlans", idx)}
+                  >
+                    Delete
+                  </button>
                 </div>
                 {Object.keys(plan).map((field, fidx) => (
                   <React.Fragment key={fidx}>
@@ -580,77 +457,232 @@ const App = () => {
                     <input
                       type="text"
                       value={plan[field]}
-                      onChange={(e) => handleArrayChange('ratePlans', idx, field, e.target.value)}
+                      onChange={(e) =>
+                        handleArrayChange(
+                          "ratePlans",
+                          idx,
+                          field,
+                          e.target.value
+                        )
+                      }
                     />
                   </React.Fragment>
                 ))}
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={() => addItem('ratePlans')}>+ Add Rate Plan</button>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => addItem("ratePlans")}
+            >
+              + Add Rate Plan
+            </button>
           </>
         );
 
-      case 'fbOptions':
+      case "fbOptions":
         return (
           <>
             {formData.fbOptions.map((fb, idx) => (
-              <div key={idx} className="form-group" style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem', borderRadius: '6px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                key={idx}
+                className="form-group"
+                style={{
+                  border: "1px solid #ccc",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                  borderRadius: "6px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
                   <h4>F&B Option {idx + 1}</h4>
-                  <button type="button" className="delete-btn" onClick={() => removeItem('fbOptions', idx)}>Delete</button>
+                  <button
+                    type="button"
+                    className="delete-btn"
+                    onClick={() => removeItem("fbOptions", idx)}
+                  >
+                    Delete
+                  </button>
                 </div>
                 <label>Restaurant Name</label>
-                <input type="text" value={fb.name} onChange={(e) => handleArrayChange('fbOptions', idx, 'name', e.target.value)} />
+                <input
+                  type="text"
+                  value={fb.name}
+                  onChange={(e) =>
+                    handleArrayChange("fbOptions", idx, "name", e.target.value)
+                  }
+                />
                 <label>Cuisine</label>
-                <input type="text" value={fb.cuisine} onChange={(e) => handleArrayChange('fbOptions', idx, 'cuisine', e.target.value)} />
+                <input
+                  type="text"
+                  value={fb.cuisine}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "fbOptions",
+                      idx,
+                      "cuisine",
+                      e.target.value
+                    )
+                  }
+                />
                 <label>Type</label>
-                <input type="text" value={fb.type} onChange={(e) => handleArrayChange('fbOptions', idx, 'type', e.target.value)} />
+                <input
+                  type="text"
+                  value={fb.type}
+                  onChange={(e) =>
+                    handleArrayChange("fbOptions", idx, "type", e.target.value)
+                  }
+                />
                 <label>Timings</label>
-                <input type="text" value={fb.timings} onChange={(e) => handleArrayChange('fbOptions', idx, 'timings', e.target.value)} />
+                <input
+                  type="text"
+                  value={fb.timings}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      "fbOptions",
+                      idx,
+                      "timings",
+                      e.target.value
+                    )
+                  }
+                />
                 <label>Meals</label>
-                <input type="text" value={fb.meals} onChange={(e) => handleArrayChange('fbOptions', idx, 'meals', e.target.value)} />
+                <input
+                  type="text"
+                  value={fb.meals}
+                  onChange={(e) =>
+                    handleArrayChange("fbOptions", idx, "meals", e.target.value)
+                  }
+                />
               </div>
             ))}
-            <button type="button" className="add-btn" onClick={() => addItem('fbOptions')}>+ Add F&B Option</button>
+            <button
+              type="button"
+              className="add-btn"
+              onClick={() => addItem("fbOptions")}
+            >
+              + Add F&B Option
+            </button>
           </>
         );
-
 
       default:
         return <p>Unknown section</p>;
     }
   };
   return (
-
-    <div className='max-w-[1424px] mx-auto mt-10'>
-      {/* <h1 className='text-3xl font-bold mb-4'>Hotel Onboarding Form</h1> */}
-      <div className='grid grid-cols-4  gap-10'>
-
-
+    <div className="h-screen">
+      {/* <h1 className="text-3xl font-bold mb-4">Hotel Onboarding Form</h1> */}
+      <div className="grid grid-cols-4 gap-10 h-full">
         {/* Step Navigation Bar */}
-        <div className=" flex flex-col gap-2">
+        <div className="flex gap-6 bg-slate-800 text-white h-full p-4">
+          <div className="relative flex flex-col items-center space-y-6 h-fit">
+            {/* Vertical Line */}
+            <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-gray-500" />
 
-          {steps.map((step, index) => (
-            <div
-              key={step.key}
-              className={`step-nav-item ${index === currentStepIndex ? 'active' : ''} ${completedSteps.includes(step.key) ? 'completed' : ''}`}
-              onClick={() => setCurrentStepIndex(index)}
-            >
-              {step.label}
-            </div>
-          ))}
+            {steps.map((step, index) => {
+              const isCompleted = completedSteps.includes(step.key);
+              const isActive = index === currentStepIndex;
 
+              return (
+                <div
+                  key={step.key}
+                  className={`relative z-10 flex items-center gap-4 cursor-pointer group ${
+                    step.isDisabled ? "" : ""
+                  }`}
+                  onClick={() => !step.isDisabled && setCurrentStepIndex(index)}
+                >
+                  {/* Circle */}
+                  <div
+                    className={`size-7 rounded-full flex items-center justify-center transition-all duration-300
+                ${
+                  isCompleted
+                    ? "bg-green-500"
+                    : isActive
+                    ? "bg-blue-500"
+                    : step.isDisabled
+                    ? "bg-gray-700 opacity-25"
+                    : "bg-gray-500"
+                }`}
+                  >
+                    {isCompleted ? (
+                      <span className="text-sm font-bold">✓</span>
+                    ) : (
+                      <span className={`text-sm font-bold `}>{index + 1}</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="flex flex-col justify-start space-y-7">
+            {steps.map((step, index) => {
+              const isCompleted = completedSteps.includes(step.key);
+              const isActive = index === currentStepIndex;
+
+              return (
+                <div
+                  key={step.key}
+                  className={`transition-all duration-200 font-medium cursor-pointer
+              ${
+                isActive
+                  ? "text-blue-400"
+                  : isCompleted
+                  ? "text-green-400"
+                  : "text-gray-300"
+              }`}
+                  onClick={() => !step.isDisabled && setCurrentStepIndex(index)}
+                >
+                  {step.label}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* <div className="space-y-4">
+            {steps.map((step, index) => (
+              <div
+                key={step.key}
+                className={` ${index === currentStepIndex ? "active" : ""} ${
+                  completedSteps.includes(step.key) ? "completed" : ""
+                }`}
+                onClick={() => setCurrentStepIndex(index)}
+              >
+                {step.label}
+              </div>
+            ))}
+          </div> */}
         </div>
 
         {/* Step Content */}
-        <form className='col-span-3' onSubmit={(e) => e.preventDefault()}>
-          <h1 className='text-2xl mb-2 font-semibold'>{steps[currentStepIndex].label}</h1>
+        <form
+          className="col-span-3 overflow-y-auto"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <h1 className="text-2xl mb-2 font-semibold">
+            {steps[currentStepIndex].label}
+          </h1>
           {renderStepSection()}
 
-          <div style={{ marginTop: '1rem' }}>
-            <button type="button" onClick={saveStepData} className="submit-btn">Save & Next</button>
+          <div style={{ marginTop: "1rem" }}>
+            <button type="button" onClick={saveStepData} className="submit-btn">
+              Save & Next
+            </button>
+
             {currentStepIndex < steps.length - 1 && (
-              <button type="button" onClick={goToNextStep} className="submit-btn" style={{ marginLeft: '10px' }}>
+              <button
+                type="button"
+                onClick={goToNextStep}
+                className="submit-btn"
+                style={{ marginLeft: "10px" }}
+              >
                 Next
               </button>
             )}
@@ -658,7 +690,6 @@ const App = () => {
         </form>
       </div>
     </div>
-
   );
 };
 
