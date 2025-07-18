@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const ImportantContacts = () => {
-  const [formData, setFormData] = useState(defaultFormData);
+const ImportantContacts = ({ formData, handleChange }) => {
   return (
     <div>
       {formData.importantContacts.map((contact, idx) => (
@@ -44,40 +43,25 @@ const ImportantContacts = () => {
           <input
             type="text"
             value={contact.name}
-            // onChange={(e) =>
-            //   handleArrayChange(
-            //     "importantContacts",
-            //     idx,
-            //     "name",
-            //     e.target.value
-            //   )
-            // }
+            onChange={(e) =>
+              handleChange("importantContacts", idx, "name", e.target.value)
+            }
           />
           <label>Phone</label>
           <input
             type="text"
             value={contact.phone}
-            // onChange={(e) =>
-            //   handleArrayChange(
-            //     "importantContacts",
-            //     idx,
-            //     "phone",
-            //     e.target.value
-            //   )
-            // }
+            onChange={(e) =>
+              handleChange("importantContacts", idx, "phone", e.target.value)
+            }
           />
           <label>Email</label>
           <input
             type="email"
             value={contact.email}
-            // onChange={(e) =>
-            //   handleArrayChange(
-            //     "importantContacts",
-            //     idx,
-            //     "email",
-            //     e.target.value
-            //   )
-            // }
+            onChange={(e) =>
+              handleChange("importantContacts", idx, "email", e.target.value)
+            }
           />
         </div>
       ))}

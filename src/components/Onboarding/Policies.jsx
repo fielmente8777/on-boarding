@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const Policies = () => {
-  const [formData, setFormData] = useState(defaultFormData);
-
+const Policies = ({ formData, handleChange }) => {
   return (
     <div>
       {Object.keys(defaultFormData.policies).map((field, idx) => (
@@ -12,7 +10,7 @@ const Policies = () => {
           <input
             type="text"
             value={formData.policies[field]}
-            // onChange={(e) => handleChange("policies", field, e.target.value)}
+            onChange={(e) => handleChange("policies", field, e.target.value)}
           />
         </div>
       ))}

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const TouristInterest = () => {
-  const [formData, setFormData] = useState(defaultFormData);
+const TouristInterest = ({ formData, handleChange }) => {
   return (
     <div>
       {formData.touristInterest.map((place, idx) => (
@@ -36,14 +35,17 @@ const TouristInterest = () => {
           <input
             type="text"
             value={place}
-            onChange={(e) => {
-              const updated = [...formData.touristInterest];
-              updated[idx] = e.target.value;
-              setFormData((prev) => ({
-                ...prev,
-                touristInterest: updated,
-              }));
-            }}
+            onChange={(e) =>
+              handleChange("touristInterest", idx, "", e.target.value)
+            }
+            // onChange={(e) => {
+            //   const updated = [...formData.touristInterest];
+            //   updated[idx] = e.target.value;
+            //   setFormData((prev) => ({
+            //     ...prev,
+            //     touristInterest: updated,
+            //   }));
+            // }}
             placeholder="e.g., India Gate, Connaught Place"
           />
         </div>
@@ -51,12 +53,12 @@ const TouristInterest = () => {
       <button
         type="button"
         className="add-btn"
-        onClick={() =>
-          setFormData((prev) => ({
-            ...prev,
-            touristInterest: [...prev.touristInterest, ""],
-          }))
-        }
+        // onClick={() =>
+        //   setFormData((prev) => ({
+        //     ...prev,
+        //     touristInterest: [...prev.touristInterest, ""],
+        //   }))
+        // }
       >
         + Add Tourist Place
       </button>

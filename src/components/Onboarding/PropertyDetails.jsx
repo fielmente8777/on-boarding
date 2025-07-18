@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { propertyFields } from "../constats/formInput";
-import { defaultFormData } from "../App";
+import { propertyFields } from "../../constats/formInput";
+import { defaultFormData } from "../../constats/formData";
 
-const PropertyDetails = () => {
-  const [formData, setFormData] = useState(defaultFormData);
-
+const PropertyDetails = ({ formData, handleChange }) => {
   return (
     <div className="max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-md">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Property Details
       </h2>
+
       <div className="grid grid-cols-2 gap-6">
         {propertyFields.map((field, idx) => {
           if (field.group) {
@@ -57,11 +56,10 @@ const PropertyDetails = () => {
                   type={field.type}
                   step={field.step || undefined}
                   value={value}
-                  onChange={
-                    (e) => console.log("test")
-                    // handleChange("propertyDetails", field.key, e.target.value)
+                  onChange={(e) =>
+                    handleChange("propertyDetails", field.key, e.target.value)
                   }
-                  className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                  className="border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               )}
             </div>

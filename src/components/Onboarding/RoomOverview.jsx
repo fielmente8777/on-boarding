@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const RoomOverview = () => {
-  const [formData, setFormData] = useState(defaultFormData);
-
+const RoomOverview = ({ formData, handleChange }) => {
   return (
     <div>
       {formData.rooms.map((room, idx) => (
@@ -47,9 +45,9 @@ const RoomOverview = () => {
               <input
                 type="text"
                 value={room[field]}
-                // onChange={(e) =>
-                //   handleArrayChange("rooms", idx, field, e.target.value)
-                // }
+                onChange={(e) =>
+                  handleChange("rooms", idx, field, e.target.value)
+                }
               />
             </div>
           ))}

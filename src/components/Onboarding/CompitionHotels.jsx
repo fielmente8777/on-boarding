@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const CompitionHotels = () => {
-  const [formData, setFormData] = useState(defaultFormData);
-
+const CompitionHotels = ({ formData, handleChange }) => {
+  console.log(formData);
   return (
     <div>
       {formData.competitionHotels.map((hotel, idx) => (
@@ -37,14 +36,17 @@ const CompitionHotels = () => {
           <input
             type="text"
             value={hotel}
-            onChange={(e) => {
-              const updated = [...formData.competitionHotels];
-              updated[idx] = e.target.value;
-              setFormData((prev) => ({
-                ...prev,
-                competitionHotels: updated,
-              }));
-            }}
+            // onChange={(e) => {
+            //   const updated = [...formData.competitionHotels];
+            //   updated[idx] = e.target.value;
+            //   setFormData((prev) => ({
+            //     ...prev,
+            //     competitionHotels: updated,
+            //   }));
+            // }}
+            onChange={(e) =>
+              handleChange("competitionHotels", idx, "", e.target.value)
+            }
             placeholder="Hotel name"
           />
         </div>

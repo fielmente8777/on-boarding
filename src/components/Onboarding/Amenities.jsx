@@ -64,15 +64,15 @@ const amenitiesList = [
 
 // amenitiesList.forEach((a) => (defaultFormData.amenities[a] = "No"));
 
-const Amenities = () => {
+const Amenities = ({ formData, handleChange }) => {
   return (
     <div className="grid grid-cols-2 gap-5">
       {amenitiesList.map((amenity, idx) => (
         <div key={idx} className="form-group horizontal">
           <label className="!text-start">{amenity}</label>
           <select
-          // value={formData.amenities[amenity]}
-          // onChange={(e) => handleChange("amenities", amenity, e.target.value)}
+            value={formData.amenities[amenity]}
+            onChange={(e) => handleChange("amenities", amenity, e.target.value)}
           >
             <option value="Yes">Yes</option>
             <option value="No">No</option>

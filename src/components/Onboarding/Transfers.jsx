@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../App";
+import { defaultFormData } from "../../constats/formData";
 
-const Transfers = () => {
-  const [formData, setFormData] = useState(defaultFormData);
+const Transfers = ({ formData, handleChange, handleArrayChange }) => {
   return (
     <div>
       {formData.transfers.map((t, idx) => (
@@ -45,26 +44,26 @@ const Transfers = () => {
           <input
             type="text"
             value={t.model}
-            // onChange={(e) =>
-            //   handleArrayChange("transfers", idx, "model", e.target.value)
-            // }
+            onChange={(e) =>
+              handleChange("transfers", idx, "model", e.target.value)
+            }
           />
 
           <label>Pickup</label>
           <input
             type="text"
             value={t.pickup}
-            // onChange={(e) =>
-            //   handleArrayChange("transfers", idx, "pickup", e.target.value)
-            // }
+            onChange={(e) =>
+              handleChange("transfers", idx, "pickup", e.target.value)
+            }
           />
 
           <label>Chargeable</label>
           <select
             value={t.chargeable}
-            // onChange={(e) =>
-            //   handleArrayChange("transfers", idx, "chargeable", e.target.value)
-            // }
+            onChange={(e) =>
+              handleChange("transfers", idx, "chargeable", e.target.value)
+            }
           >
             <option value="Yes">Yes</option>
             <option value="No">No</option>
@@ -74,18 +73,18 @@ const Transfers = () => {
           <input
             type="text"
             value={t.oneWay}
-            // onChange={(e) =>
-            //   handleArrayChange("transfers", idx, "oneWay", e.target.value)
-            // }
+            onChange={(e) =>
+              handleChange("transfers", idx, "oneWay", e.target.value)
+            }
           />
 
           <label>Two Way</label>
           <input
             type="text"
             value={t.twoWay}
-            // onChange={(e) =>
-            //   handleArrayChange("transfers", idx, "twoWay", e.target.value)
-            // }
+            onChange={(e) =>
+              handleChange("transfers", idx, "twoWay", e.target.value)
+            }
           />
         </div>
       ))}
