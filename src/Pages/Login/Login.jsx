@@ -7,8 +7,14 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loader from "../../components/Loader";
 import { BASE_URL } from "../../constants/constant";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
+import {
+  GoogleLogin,
+  GoogleOAuthProvider,
+  useGoogleLogin,
+} from "@react-oauth/google";
 import { verify } from "../../utils/verify";
+
+console.log("Env", process.env.REACT_APP_CLIENT_ID);
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -103,12 +109,9 @@ const Login = () => {
     // setLoading(true);
     setError(null);
     try {
-      const token = response.credential;
-      console.log(token);
+      const token = response.credential || response.access_token;
 
       const result = (await verify(token)).data;
-
-      console.log(result);
 
       let timerInterval;
       if (result?.status === true) {
@@ -130,16 +133,14 @@ const Login = () => {
           willClose: () => {
             clearInterval(timerInterval);
           },
-        }).then((result) => {
-          if (result.dismiss === Swal.DismissReason.timer) {
-            navigate("/");
-          }
         });
+
+        navigate("/onboarding/form");
       }
 
       // await testprotected(jwtToken);
       // saveToken(jwtToken);
-      // navigate("/onboarding");
+
       return "Login successful";
     } catch (err) {
       console.error("Authentication error:", err);
@@ -294,10 +295,22 @@ const Login = () => {
               </div>
 
               <div className="w-full">
-                <GoogleOAuthProvider>
-                  <GoogleLoginButton
+                <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
+                  {/* <GoogleLoginButton
                     handleSuccess={handleSuccess}
                     handleFailure={handleFailure}
+                  /> */}
+                  <GoogleLogin
+                    onSuccess={handleSuccess}
+                    onError={handleFailure}
+                    // disabled={loading}
+                    // text="continue_with"
+                    width="100%"
+                    // type="standard"
+                    // theme="filled_blue"
+                    size="large"
+                    // shape="pill"
+                    useOneTap={true}
                   />
                 </GoogleOAuthProvider>
               </div>

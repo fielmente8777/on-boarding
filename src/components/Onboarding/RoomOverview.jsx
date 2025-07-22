@@ -11,9 +11,24 @@ const roomFieldLabels = {
   adult: "Adult",
   noOfRooms: "Number of Rooms",
   price: "Price",
-  roomFacilities: "Room Facilities",
+  roomFacilities: "Room Facilities e.g AC,Wifi",
   roomDescription: "Room Description",
   roomImage: "Room Images",
+};
+
+const roomFieldsInitial = {
+  roomType: "",
+  roomName: "",
+  roomSubheading: "",
+  isWeekendFormat: "",
+  changedPrice: "",
+  child: "",
+  adult: "",
+  noOfRooms: "",
+  price: "",
+  roomFacilities: "",
+  roomDescription: "",
+  roomImage: "",
 };
 
 const RoomOverview = ({
@@ -56,13 +71,35 @@ const RoomOverview = ({
       ...prev,
       {
         id: prev.length + 1,
-        ...roomFieldLabels,
+        ...roomFieldsInitial,
       },
     ]);
   };
 
+  const removeRoom = (roomId) => {
+    setRoomFormData((prev) => prev.filter((room) => room.id !== roomId));
+  };
+
   const handleInputChange = (event, id) => {
     const { name, value } = event.target;
+
+    if (name.toLocaleLowerCase() === "roomFacilities".toLocaleLowerCase()) {
+      const allFacilities = value.split(",");
+      const updatedData = roomFormData?.map((room) => {
+        if (room.id === id) {
+          return {
+            ...room,
+            [name]: allFacilities,
+          };
+        }
+        return room;
+      });
+
+      setRoomFormData(updatedData);
+
+      return;
+    }
+
     const updatedData = roomFormData?.map((room) => {
       if (room.id === id) {
         return {
@@ -100,15 +137,26 @@ const RoomOverview = ({
     }
   };
 
-  const handleRemoveRoomImage = (roomid, idx) => {};
+  const handleRemoveRoomImage = (roomid, idx) => {
+    console.log(idx, roomid);
+    const updatedData = roomFormData?.map((room) => {
+      if (room.id === roomid) {
+        return {
+          ...room,
+          roomImage: room.roomImage.filter((image, index) => index !== idx),
+        };
+      }
+      return room;
+    });
+    setRoomFormData(updatedData);
+  };
 
   const nextStep = () => {
     setFormData((prev) => ({ ...prev, rooms: roomFormData }));
-    const isEmpty = Object.values(roomFormData[0]).every(
-      (value) => value === ""
-    );
 
-    // console.log(isEmpty);
+    // const isEmpty = Object.values(roomFormData[0]).some(
+    //   (value) => value === "" || value.roomType === ""
+    // );
 
     // if (isEmpty) {
     //   alert("Please fill in at least one field before continuing.");
@@ -152,15 +200,25 @@ const RoomOverview = ({
     }
   }, [formData]);
 
-  console.log(roomFormData);
-
   return (
     <div>
       <div className="space-y-4">
         {roomFormData?.map((room, idx) => {
           return (
             <div className="">
-              <hr className="mb-4" />
+              <div className="h-[1.5px] w-full bg-gray-200 my-8 relative">
+                <h2 className="font-semibold text-gray-600 relative left-0 -top-3 bg-gray-200 w-fit px-2 rounded-sm">
+                  Room {idx + 1}
+                </h2>
+                {idx !== 0 && (
+                  <span
+                    className=" cursor-pointer absolute right-0 -top-3 font-bold bg-red-400 text-white size-6 rounded-full flex justify-center items-center"
+                    onClick={() => removeRoom(room.id)}
+                  >
+                    X
+                  </span>
+                )}
+              </div>
 
               <div className={`grid grid-cols-2 gap-4`}>
                 {Object.keys(room).map((field, idx) => {
@@ -183,15 +241,13 @@ const RoomOverview = ({
                       <div key={idx} className="flex gap-4 items-center">
                         <div className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm">
                           <select
-                            name=""
-                            id=""
+                            name={field}
+                            onChange={(e) => handleInputChange(e, room.id)}
                             className="w-full outline-none h-full"
                           >
-                            <option value="">
-                              Select / {roomFieldLabels[field]}
-                            </option>
-                            <option value="">Yes</option>
-                            <option value="">No</option>
+                            <option>Select / {roomFieldLabels[field]}</option>
+                            <option value={true}>Yes</option>
+                            <option value={false}>No</option>
                           </select>
                         </div>
                       </div>
@@ -208,9 +264,9 @@ const RoomOverview = ({
                       <div key={idx} className="flex gap-4 items-center">
                         <div className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm">
                           <select
-                            name=""
-                            id=""
+                            name={field}
                             className="w-full outline-none h-full"
+                            onChange={(e) => handleInputChange(e, room.id)}
                           >
                             <option value="">
                               Select / {roomFieldLabels[field]}
@@ -253,6 +309,8 @@ const RoomOverview = ({
                         <input
                           type="text"
                           placeholder={roomFieldLabels[field]}
+                          name={field}
+                          value={room[field]}
                           className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
                           onChange={(e) => handleInputChange(e, room.id)}
                         />
@@ -263,34 +321,6 @@ const RoomOverview = ({
               </div>
 
               {/* rooms images preview  */}
-              {/* <div>
-                {roomsImagesPreview[room.id] &&
-                  roomsImagesPreview[room.id].length > 0 && (
-                    <div className="grid grid-cols-4 gap-4 mt-6">
-                      {roomsImagesPreview[room.id].map((image, idx) => (
-                        <div
-                          key={idx}
-                          className="flex gap-4 items-cente relative"
-                        >
-                          <div className="w-full">
-                            <img
-                              src={image}
-                              alt=""
-                              className="w-full h-52 object-cover p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
-                            />
-                          </div>
-
-                          <span
-                            className="size-5 absolute -top-1 -right-2 bg-red-500 text-white flex items-center justify-center rounded-full text-xs font-bold cursor-pointer"
-                            onClick={() => handleRemoveRoomImage(room.id, idx)}
-                          >
-                            X
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-              </div> */}
 
               <div>
                 {Array.isArray(room.roomImage) &&
@@ -353,7 +383,7 @@ const RoomOverview = ({
           </button>
         )}
 
-        {(currentStep === currentStepIndex) === steps.length - 1 ? (
+        {currentStepIndex === steps.length - 1 ? (
           <button
             type="submit"
             // onClick={saveStepData}

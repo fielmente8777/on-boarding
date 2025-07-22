@@ -163,36 +163,34 @@ const OnboardingForm = () => {
   };
 
   const goToNextStep = (roomFormData) => {
-    console.log(roomFormData);
+    // let allFieldsEmpty = false;
+    // const currentForm = formData[currentStep.key];
 
-    let allFieldsEmpty = false;
-    const currentForm = formData[currentStep.key];
+    // if (typeof currentForm === "object" && !Array.isArray(currentForm)) {
+    //   allFieldsEmpty = Object.values(currentForm).every(
+    //     (value) =>
+    //       value === undefined ||
+    //       value === null ||
+    //       value.toString().trim() === ""
+    //   );
+    // } else {
+    //   allFieldsEmpty = currentForm.every((item) => {
+    //     if (typeof item === "object" && item !== null) {
+    //       return Object.values(item).every(
+    //         (val) =>
+    //           val === undefined || val === null || val.toString().trim() === ""
+    //       );
+    //     }
+    //     return (
+    //       item === undefined || item === null || item.toString().trim() === ""
+    //     );
+    //   });
+    // }
 
-    if (typeof currentForm === "object" && !Array.isArray(currentForm)) {
-      allFieldsEmpty = Object.values(currentForm).every(
-        (value) =>
-          value === undefined ||
-          value === null ||
-          value.toString().trim() === ""
-      );
-    } else {
-      allFieldsEmpty = currentForm.every((item) => {
-        if (typeof item === "object" && item !== null) {
-          return Object.values(item).every(
-            (val) =>
-              val === undefined || val === null || val.toString().trim() === ""
-          );
-        }
-        return (
-          item === undefined || item === null || item.toString().trim() === ""
-        );
-      });
-    }
-
-    if (allFieldsEmpty) {
-      alert("Please fill in at least one field before continuing.");
-      return;
-    }
+    // if (allFieldsEmpty) {
+    //   alert("Please fill in at least one field before continuing.");
+    //   return;
+    // }
 
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
@@ -457,7 +455,7 @@ const OnboardingForm = () => {
                 </button>
               )}
 
-              {(currentStep === currentStepIndex) === steps.length - 1 ? (
+              {currentStepIndex === steps.length - 1 ? (
                 <button
                   type="submit"
                   // onClick={saveStepData}
