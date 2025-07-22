@@ -4,67 +4,75 @@ import { defaultFormData } from "../../constants/formData";
 const ImportantContacts = ({ formData, handleChange, addItem, removeItem }) => {
   return (
     <div>
-      {formData.importantContacts.map((contact, idx) => (
-        <div
-          key={idx}
-          className="form-group"
-          style={{
-            border: "1px solid #ccc",
-            padding: "1rem",
-            marginBottom: "1rem",
-            borderRadius: "6px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3>Contact {idx + 1}</h3>
-            <button
-              type="button"
-              className="delete-btn"
-              onClick={() => removeItem("importantContacts", idx)}
-              style={{
-                backgroundColor: "#dc3545",
-                color: "#fff",
-                border: "none",
-                padding: "0.4rem 0.8rem",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
+      <div className="space-y-6">
+        {formData.importantContacts.map((contact, idx) => (
+          <div key={idx} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold">Contact {idx + 1}</h3>
+
+              {idx !== 0 && (
+                <button
+                  type="button"
+                  className="size-6 rounded-full bg-red-500 text-white"
+                  onClick={() => removeItem("importantContacts", idx)}
+                >
+                  X
+                </button>
+              )}
+            </div>
+
+            <div>
+              <label>Name</label>
+
+              <input
+                type="text"
+                value={contact.name}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("importantContacts", idx, "name", e.target.value)
+                }
+              />
+            </div>
+
+            <div>
+              <label>Phone</label>
+
+              <input
+                type="text"
+                value={contact.phone}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange(
+                    "importantContacts",
+                    idx,
+                    "phone",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+
+            <div>
+              <label>Email</label>
+
+              <input
+                type="email"
+                value={contact.email}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange(
+                    "importantContacts",
+                    idx,
+                    "email",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
           </div>
-          <label>Name</label>
-          <input
-            type="text"
-            value={contact.name}
-            onChange={(e) =>
-              handleChange("importantContacts", idx, "name", e.target.value)
-            }
-          />
-          <label>Phone</label>
-          <input
-            type="text"
-            value={contact.phone}
-            onChange={(e) =>
-              handleChange("importantContacts", idx, "phone", e.target.value)
-            }
-          />
-          <label>Email</label>
-          <input
-            type="email"
-            value={contact.email}
-            onChange={(e) =>
-              handleChange("importantContacts", idx, "email", e.target.value)
-            }
-          />
-        </div>
-      ))}
+        ))}
+      </div>
+
       <button
         type="button"
         className="add-btn"

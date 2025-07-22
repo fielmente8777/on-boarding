@@ -2,67 +2,67 @@ import React from "react";
 
 const RoomFacilities = ({ formData, handleChange, addItem, removeItem }) => {
   return (
-    <div>
+    <div className="space-y-6">
       {formData.roomFacilities.map((facility, idx) => (
-        <div
-          key={idx}
-          className="form-group"
-          style={{
-            border: "1px solid #ccc",
-            padding: "1rem",
-            marginBottom: "1rem",
-            borderRadius: "6px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h4>Facility {idx + 1}</h4>
-            <button
-              type="button"
-              className="delete-btn"
-              onClick={() => removeItem("roomFacilities", idx)}
-            >
-              Delete
-            </button>
+        <div key={idx} className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h4 className="font-semibold">Facility {idx + 1}</h4>
+
+            {idx !== 0 && (
+              <button
+                type="button"
+                className="size-6 rounded-full bg-red-500 text-white"
+                onClick={() => removeItem("roomFacilities", idx)}
+              >
+                X
+              </button>
+            )}
           </div>
-          <label>Facility</label>
-          <input
-            type="text"
-            value={facility.name}
-            onChange={(e) =>
-              handleChange("roomFacilities", idx, "name", e.target.value)
-            }
-          />
-          <label>Availability</label>
-          <select
-            value={facility.available}
-            onChange={(e) =>
-              handleChange("roomFacilities", idx, "available", e.target.value)
-            }
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-          <label>Complimentary</label>
-          <select
-            value={facility.complimentary}
-            onChange={(e) =>
-              handleChange(
-                "roomFacilities",
-                idx,
-                "complimentary",
-                e.target.value
-              )
-            }
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+
+          <div className="space-y-2">
+            <label className="font-medium">Facility</label>
+            <input
+              type="text"
+              value={facility.name}
+              className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+              onChange={(e) =>
+                handleChange("roomFacilities", idx, "name", e.target.value)
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="font-medium">Availability</label>
+            <select
+              value={facility.available}
+              className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+              onChange={(e) =>
+                handleChange("roomFacilities", idx, "available", e.target.value)
+              }
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="font-medium">Complimentary</label>
+            <select
+              value={facility.complimentary}
+              className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+              onChange={(e) =>
+                handleChange(
+                  "roomFacilities",
+                  idx,
+                  "complimentary",
+                  e.target.value
+                )
+              }
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
         </div>
       ))}
       <button

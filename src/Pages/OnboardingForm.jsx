@@ -29,6 +29,7 @@ const steps = [
 ];
 
 const OnboardingForm = () => {
+  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [stepTraversed, setStepTraversed] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -329,6 +330,26 @@ const OnboardingForm = () => {
     console.log(formData);
   };
 
+  const handleResize = (event) => {
+    const startX = event.clientX;
+    console.log(startX);
+    const moveHandler = (e) => {
+      const diffX = e.clientX - startX;
+      const newWidth = sidebarWidth + diffX;
+
+      if (newWidth >= 300) {
+        setSidebarWidth(newWidth);
+      }
+    };
+    const upHandler = () => {
+      document.removeEventListener("mousemove", moveHandler);
+      document.removeEventListener("mouseup", upHandler);
+    };
+
+    document.addEventListener("mousemove", moveHandler);
+    document.addEventListener("mouseup", upHandler);
+  };
+
   useEffect(() => {
     const savedData = { ...defaultFormData };
     steps.forEach(({ key }) => {
@@ -341,9 +362,14 @@ const OnboardingForm = () => {
   return (
     <div className="h-screen">
       {/* <h1 className="text-3xl font-bold mb-4">Hotel Onboarding Form</h1> */}
-      <div className="grid grid-cols-4 h-full">
+      <div className="flex h-full">
         {/* Step Navigation Bar */}
-        <div className="flex gap-6 bg-slate-800 text-white h-full p-4 relative">
+        <div
+          style={{
+            width: sidebarWidth,
+          }}
+          className="flex gap-6 bg-slate-800 text-white h-full p-4 relative"
+        >
           <div className="relative flex flex-col items-center gap-7 h-fit">
             {/* Vertical Line */}
             <div className="absolute left-1/2 -translate-x-1/2 top-0 h-full w-px bg-gray-500" />
@@ -416,18 +442,24 @@ const OnboardingForm = () => {
             })}
           </div>
 
-          {/* <div className="bg-white w-2 h-full absolute right-0 top-0 cursor-w-resize" /> */}
+          <div
+            className="bg-white w-2 h-full absolute right-0 top-0 cursor-w-resize"
+            onMouseDown={handleResize}
+            // onDoubleClick={handleResize}
+          />
         </div>
 
         {/* Step Content */}
         <form
-          className="col-span-3 overflow-y-auto p-4"
+          className="overflow-y-auto p-4 flex-1 space-y-6"
           onSubmit={handleFormSubmit}
         >
-          <h1 className="text-2xl mb-2 font-semibold">
+          <h1 className="text-2xl mb-2 font-semibold bg-gray-200 text-gray-700 w-fit px-2 rounded-sm shadow-sm">
             {steps[currentStepIndex].label}
           </h1>
-          {renderStepSection()}
+
+          {/* render form section  */}
+          <div>{renderStepSection()}</div>
 
           {/* Navigation Buttons */}
           {currentStep.key !== "rooms" && (

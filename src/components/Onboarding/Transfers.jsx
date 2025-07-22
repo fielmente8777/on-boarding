@@ -4,90 +4,88 @@ import { defaultFormData } from "../../constants/formData";
 const Transfers = ({ formData, handleChange, addItem, removeItem }) => {
   return (
     <div>
-      {formData.transfers.map((t, idx) => (
-        <div
-          key={idx}
-          className="form-group"
-          style={{
-            border: "1px solid #ccc",
-            padding: "1rem",
-            marginBottom: "1rem",
-            borderRadius: "6px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3>Transfer {idx + 1}</h3>
-            <button
-              type="button"
-              className="delete-btn"
-              onClick={() => removeItem("transfers", idx)}
-              style={{
-                backgroundColor: "#dc3545",
-                color: "#fff",
-                border: "none",
-                padding: "0.4rem 0.8rem",
-                borderRadius: "4px",
-                cursor: "pointer",
-              }}
-            >
-              Delete
-            </button>
+      <div className="space-y-6">
+        {formData.transfers.map((t, idx) => (
+          <div key={idx} className="space-y-4">
+            <div className="flex justify-between upi-container">
+              <h3 className="font-semibold">Transfer {idx + 1}</h3>
+
+              {idx !== 0 && (
+                <button
+                  type="button"
+                  className="size-6 rounded-full bg-red-500 text-white"
+                  onClick={() => removeItem("transfers", idx)}
+                >
+                  X
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label>Model</label>
+              <input
+                type="text"
+                value={t.model}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("transfers", idx, "model", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label>Pickup</label>
+              <input
+                type="text"
+                value={t.pickup}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("transfers", idx, "pickup", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label>Chargeable</label>
+              <select
+                value={t.chargeable}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("transfers", idx, "chargeable", e.target.value)
+                }
+              >
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label>One Way</label>
+              <input
+                type="text"
+                value={t.oneWay}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("transfers", idx, "oneWay", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label>Two Way</label>
+              <input
+                type="text"
+                value={t.twoWay}
+                className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm mt-2"
+                onChange={(e) =>
+                  handleChange("transfers", idx, "twoWay", e.target.value)
+                }
+              />
+            </div>
           </div>
+        ))}
+      </div>
 
-          <label>Model</label>
-          <input
-            type="text"
-            value={t.model}
-            onChange={(e) =>
-              handleChange("transfers", idx, "model", e.target.value)
-            }
-          />
-
-          <label>Pickup</label>
-          <input
-            type="text"
-            value={t.pickup}
-            onChange={(e) =>
-              handleChange("transfers", idx, "pickup", e.target.value)
-            }
-          />
-
-          <label>Chargeable</label>
-          <select
-            value={t.chargeable}
-            onChange={(e) =>
-              handleChange("transfers", idx, "chargeable", e.target.value)
-            }
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
-
-          <label>One Way</label>
-          <input
-            type="text"
-            value={t.oneWay}
-            onChange={(e) =>
-              handleChange("transfers", idx, "oneWay", e.target.value)
-            }
-          />
-
-          <label>Two Way</label>
-          <input
-            type="text"
-            value={t.twoWay}
-            onChange={(e) =>
-              handleChange("transfers", idx, "twoWay", e.target.value)
-            }
-          />
-        </div>
-      ))}
       <button
         type="button"
         className="add-btn"

@@ -68,11 +68,12 @@ const Amenities = ({ formData, handleChange }) => {
   return (
     <div className="grid grid-cols-2 gap-5">
       {amenitiesList.map((amenity, idx) => (
-        <div key={idx} className="form-group horizontal">
-          <label className="!text-start">{amenity}</label>
+        <div key={idx} className="space-y-1">
+          <label className="font-semibold">{amenity}</label>
           <select
             value={formData.amenities[amenity]}
             onChange={(e) => handleChange("amenities", amenity, e.target.value)}
+            className="col-span-full w-full p-3 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
           >
             <option value="Yes">Yes</option>
             <option value="No">No</option>
