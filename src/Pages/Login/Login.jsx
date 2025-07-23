@@ -185,149 +185,88 @@ const Login = () => {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center">
-      <div className="max-w-[1500px] w-full grid lg:grid-cols-2 items-center gap-4">
-        <div className="aspect-[4/4]">
+      <div className="max-w-[1600px] mx-auto w-full grid lg:grid-cols-2">
+        <div className="w-full md:h-[770px] h-auto">
           <img
-            src="/LoginImage.png"
+            src="/LoginImage2.png"
             alt=""
             className="w-full h-full object-cover object-bottom"
           />
         </div>
 
-        <div className="border p-6 rounded-2xl max-w-xl w-full mx-auto">
-          <div>
-            <div className="max-w-60 mx-auto aspect-[3/1]">
+        <div className="bg-[#EBF4FF] flex flex-col">
+          <div
+            className={`h-40 bg-contain bg-no-repeat relative hidden md:block`}
+            style={{
+              backgroundImage: `url('/Grid.png')`,
+            }}
+          >
+            <div className="absolute right-4 bottom-0">
               <img
-                src="/EAZOTEL LOGO.png"
+                src="/Dot.png"
                 alt=""
                 className="w-full h-full object-contain"
               />
             </div>
-
-            <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-text-black">Sign In</h2>
-              <p className="text-text-gray">
-                Provide Your Details to Access Your Account.
-              </p>
-            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6">
-            <div className="space-y-6">
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor=""
-                  className="font-medium text-text-black text-sm"
-                >
-                  Email
-                </label>
-
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="Enter you email"
-                  className="p-4 border border-text-light  outline-none placeholder:text-gray-400 shadow-sm"
-                  onChange={handleChange}
-                  value={formData.email}
+          <div className="rounded-2xl max-w-xl w-full mx-auto flex-1 flex flex-col justify-center">
+            <div>
+              <div className="max-w-60 mx-auto aspect-[3/1]">
+                <img
+                  src="/EAZOTEL LOGO.png"
+                  alt=""
+                  className="w-full h-full object-contain"
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label
-                  htmlFor=""
-                  className="font-medium text-text-black text-sm"
-                >
-                  Password
-                </label>
-
-                <div className="w-full relative">
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="p-4 border border-text-light  outline-none placeholder:text-gray-400 shadow-sm w-full"
-                    onChange={handleChange}
-                    value={formData.password}
-                  />
-
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 ">
-                    {showPassword ? (
-                      <AiOutlineEye
-                        size={20}
-                        onClick={togglePassword}
-                        className="text-gray-400"
-                      />
-                    ) : (
-                      <HiOutlineEyeOff
-                        size={20}
-                        onClick={togglePassword}
-                        className="text-gray-400"
-                      />
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-1">
-                    <input type="checkbox" id="remember" className="mt-1" />
-                    <label
-                      htmlFor="remember"
-                      className="text-sm text-text-black font-medium"
-                    >
-                      Remember Me
-                    </label>
-                  </div>
-
-                  <p
-                    onClick={() => setForget(true)}
-                    className="cursor-pointer text-sm text-secondary  inline-block font-medium"
-                  >
-                    Forgot Password
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex">
-                <button className="bg-ternary text-white py-4 shadow-md w-full flex justify-center gap-3 items-center">
-                  Sign In <SignInIcon />
-                  {spinnerLoader && <Loader size={20} color="white" />}
-                </button>
-              </div>
-
-              <div className="w-full">
-                <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
-                  {/* <GoogleLoginButton
-                    handleSuccess={handleSuccess}
-                    handleFailure={handleFailure}
-                  /> */}
-                  <GoogleLogin
-                    onSuccess={handleSuccess}
-                    onError={handleFailure}
-                    // disabled={loading}
-                    // text="continue_with"
-                    width="100%"
-                    // type="standard"
-                    // theme="filled_blue"
-                    size="large"
-                    // shape="pill"
-                    useOneTap={true}
-                  />
-                </GoogleOAuthProvider>
-              </div>
-
-              <div>
-                <p className="text-lg text-text-gray -mt-4">
-                  Don&apos;t have an account?{" "}
-                  <Link
-                    to="/signin"
-                    className="text-secondary font-medium inline-block"
-                  >
-                    Sign Up
-                  </Link>
+              <div className="space-y-4 mt-4">
+                <h2 className="text-3xl font-bold text-[#0A3A75] text-center tracking-wide ">
+                  Welcome Back!
+                </h2>
+                <p className="text-[#242424] text-center text-2xl text-primary tracking-wide">
+                  Access Your Smart Hotel Dashboard Instantly!
                 </p>
               </div>
             </div>
-          </form>
+
+            <form onSubmit={handleSubmit} className="mt-6">
+              <div className="space-y-6">
+                <div className="w-full">
+                  <GoogleOAuthProvider
+                    clientId={process.env.REACT_APP_CLIENT_ID}
+                  >
+                    <div className="max-w-52 mx-auto py-3">
+                      <GoogleLogin
+                        onSuccess={handleSuccess}
+                        onError={handleFailure}
+                        width="100%"
+                        size="large"
+                        useOneTap={true}
+                        shape="pill"
+                        theme="filled_blue"
+                      />
+                    </div>
+                  </GoogleOAuthProvider>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div
+            className={`h-40 bg-contain bg-no-repeat relative`}
+            style={{
+              backgroundImage: `url('/Grid.png')`,
+            }}
+          >
+            <div className="absolute left-0 top-0">
+              <img
+                src="/Dot.png"
+                alt=""
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
