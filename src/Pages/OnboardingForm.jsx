@@ -12,6 +12,7 @@ import RoomFacilities from "../components/Onboarding/RoomFacilities";
 import RatePlans from "../components/Onboarding/RatePlans";
 import FBOptions from "../components/Onboarding/FBOptions";
 import CardAccepted from "../components/Onboarding/CardAccepted";
+import Swal from "sweetalert2";
 
 const steps = [
   { key: "propertyDetails", label: "Property Details", isDisabled: false },
@@ -325,9 +326,48 @@ const OnboardingForm = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async(e) => {
     e.preventDefault();
-    console.log(formData);
+
+    try{
+
+      const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await response.json();
+      if (data.status) {
+        Swal.fire({
+          title: "Success",
+          text: data?.message ?data.message : "Your form has been submitted successfully.",
+          icon: "success",
+          confirmButtonText: "Close",
+        })
+      }
+      else{
+        Swal.fire({
+          title: "Error",
+          text: data?.message ?data.message:"You are alreading onboarded with us",
+          icon: "error",
+          confirmButtonText: "Close",
+        })
+      }
+    }
+    catch(error){
+      Swal.fire({
+          title: "Error",
+          text: error.message? error.message : "You are alreading onboarded with us",
+          icon: "error",
+          confirmButtonText: "Close",
+        })
+      return;
+    }
   };
 
   const handleResize = (event) => {

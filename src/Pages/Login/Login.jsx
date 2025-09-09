@@ -115,7 +115,7 @@ const Login = () => {
 
       let timerInterval;
       if (result?.status === true) {
-        // handleLocalStorage("token", result?.token || "");
+        localStorage.setItem("token", result?.token || "");
         // setCookie("token", result?.token || "");
         // setSpinnerLoader(false);
         Swal.fire({
