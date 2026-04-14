@@ -331,7 +331,8 @@ const OnboardingForm = () => {
 
     try{
 
-      const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
+      // const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
+      const response = await fetch("http://localhost:8000/api/v1/onboarding",
         {
           method: "POST",
           headers: {

@@ -113,6 +113,8 @@ const Login = () => {
 
       const result = (await verify(token)).data;
 
+      console.log(result)
+
       let timerInterval;
       if (result?.status === true) {
         localStorage.setItem("token", result?.token || "");
@@ -134,12 +136,20 @@ const Login = () => {
             clearInterval(timerInterval);
           },
         });
+        if(result?.onboarding===true){
+          navigate('/thank-you')
+        }else{
+          navigate("/onboarding/form");
+        }
+      }
+      else{
+        
 
-        navigate("/onboarding/form");
       }
 
       // await testprotected(jwtToken);
       // saveToken(jwtToken);
+
 
       return "Login successful";
     } catch (err) {
