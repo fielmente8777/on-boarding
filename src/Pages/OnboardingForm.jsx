@@ -277,11 +277,33 @@ const OnboardingForm = () => {
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+  // const handleFormSubmit = (e) => {
+  //   e.preventDefault();
 
-    console.log(formData);
-  };
+  //   console.log(formData);
+  // };
+
+  const handleFormSubmit = async (e) => {
+  e.preventDefault();
+ 
+  console.log("FINAL DATA:", formData);
+
+  try {
+    const res = await fetch("http://localhost:8000/api/v1/onboarding", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+    console.log("Response:", data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
 
   useEffect(() => {
     const savedData = { ...defaultFormData };
