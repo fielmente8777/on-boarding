@@ -284,26 +284,25 @@ const OnboardingForm = () => {
   // };
 
   const handleFormSubmit = async (e) => {
-  e.preventDefault();
- 
-  console.log("FINAL DATA:", formData);
+    e.preventDefault();
 
-  try {
-    const res = await fetch("http://localhost:8000/api/v1/onboarding", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    console.log("FINAL DATA:", formData);
 
-    const data = await res.json();
-    console.log("Response:", data);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
+    try {
+      const res = await fetch("http://localhost:8000/api/v1/onboarding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
+      const data = await res.json();
+      console.log("Response:", data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   useEffect(() => {
     const savedData = { ...defaultFormData };
@@ -344,10 +343,10 @@ const OnboardingForm = () => {
                   isCompleted
                     ? "bg-green-500"
                     : isActive
-                    ? "bg-blue-500"
-                    : isTraversed
-                    ? "bg-blue-500"
-                    : "bg-gray-500"
+                      ? "bg-blue-500"
+                      : isTraversed
+                        ? "bg-blue-500"
+                        : "bg-gray-500"
                 }`}
                   >
                     {isCompleted ? (
@@ -375,10 +374,10 @@ const OnboardingForm = () => {
                 isActive
                   ? "text-blue-300"
                   : isCompleted
-                  ? "text-green-400"
-                  : isTraversed
-                  ? "text-blue-400"
-                  : "text-gray-400"
+                    ? "text-green-400"
+                    : isTraversed
+                      ? "text-blue-400"
+                      : "text-gray-400"
               }`}
                   // onClick={() => {
                   //   if (!step.isDisabled) {

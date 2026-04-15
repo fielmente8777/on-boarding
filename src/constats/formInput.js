@@ -1,7 +1,13 @@
 export const propertyFields = [
   { key: "hotelName", label: "Hotel Name", type: "text" },
   { key: "address", label: "Address", type: "text" },
-  { key: "locality", label: "Locality & Pincode", type: "text" },
+  { key: "locality", label: "Locality ", type: "text" },
+  {key:"pinCode", label:"Pin Code", type:"text", maxLength:6},
+  {key:"city",label:"City",type:"text"},
+  {key:"state",label:"State",type:"text"},
+  {key:"country",label:"Country",type:"text"},
+  {key:"hotelPhone",label:"Hotel Phone Number",type:"text", minLength:10, maxLength:15},
+  
 
   // Distances Group
   { group: "Distances from Key Locations" },
@@ -38,5 +44,6 @@ export const propertyFields = [
     options: ["1", "2", "3", "4", "5"],
   },
   { key: "accommodationType", label: "Type of Accommodation", type: "text" },
-  { key: "hotelDescription", label: "Hotel Description", type: "textarea" },
+  { key: "hotelDescription", label: "Hotel Description", type: "text" },
+  {key:"currency", label:"Currency", type:"select", options:["USD","INR","EUR","GBP","JPY","CNY","AUD","CAD","CHF","HKD"]},
 ];
