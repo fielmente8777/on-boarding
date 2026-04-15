@@ -44,6 +44,6 @@ export const propertyFields = [
     options: ["1", "2", "3", "4", "5"],
   },
   { key: "accommodationType", label: "Type of Accommodation", type: "text" },
-  { key: "hotelDescription", label: "Hotel Description", type: "text" },
+  { key: "hotelDescription", label: "Hotel Description", type: "textarea" },
   {key:"currency", label:"Currency", type:"select", options:["USD","INR","EUR","GBP","JPY","CNY","AUD","CAD","CHF","HKD"]},
 ];
