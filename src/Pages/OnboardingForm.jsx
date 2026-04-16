@@ -30,10 +30,10 @@ const steps = [
 ];
 
 const OnboardingForm = () => {
-  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [stepTraversed, setStepTraversed] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [sidebarWidth,setSidebarWidth]=useState();
   const [completedSteps, setCompletedSteps] = useState(() => {
     const saved = localStorage.getItem("completedSteps");
     return saved ? JSON.parse(saved) : [];
@@ -212,7 +212,6 @@ const OnboardingForm = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
-
   const renderStepSection = () => {
     switch (currentStep.key) {
       case "propertyDetails":
