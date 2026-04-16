@@ -33,6 +33,7 @@ export const propertyFields = [
   },
 
   { key: "hotelWebsite", label: "Hotel Website", type: "url" },
+  {key:"hotelEmail", label:"Hotel Email", type:"email"},
   { key: "yearBuilt", label: "Year Built", type: "number" },
   { key: "renovationYear", label: "Recent Renovation Year", type: "number" },
   { key: "latitude", label: "Latitude", type: "number", step: "any" },
