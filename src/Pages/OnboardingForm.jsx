@@ -293,12 +293,14 @@ const OnboardingForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
       console.log("Response:", data);
+      if (data.success) {
     } catch (error) {
       console.error("Error:", error);
     }
