@@ -20,7 +20,6 @@ const PropertyDetails = ({ formData, handleChange }) => {
               </div>
             );
           }
-
           const value = formData.propertyDetails[field.key] || "";
 
           return (
