@@ -173,14 +173,14 @@ const OnboardingForm = () => {
         (value) =>
           value === undefined ||
           value === null ||
-          value.toString().trim() === ""
+          value.toString().trim() === "",
       );
     } else {
       allFieldsEmpty = currentForm.every((item) => {
         if (typeof item === "object" && item !== null) {
           return Object.values(item).every(
             (val) =>
-              val === undefined || val === null || val.toString().trim() === ""
+              val === undefined || val === null || val.toString().trim() === "",
           );
         }
         return (
@@ -207,7 +207,7 @@ const OnboardingForm = () => {
   const goToPrevStep = () => {
     if (currentStepIndex > 0) {
       setStepTraversed((prev) =>
-        prev.filter((step) => step !== currentStep.key)
+        prev.filter((step) => step !== currentStep.key),
       );
       setCurrentStepIndex(currentStepIndex - 1);
     }
@@ -332,14 +332,17 @@ const OnboardingForm = () => {
 
     try {
       // const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
-      const response = await fetch("http://localhost:8000/api/v1/onboarding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await fetch(
+        "https://gian-1eve.onrender.com/api/v1/onboarding",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
       const data = await response.json();
       if (data.status) {
         Swal.fire({
@@ -375,7 +378,7 @@ const OnboardingForm = () => {
 
   const handleResize = (event) => {
     const startX = event.clientX;
-    console.log(startX);
+
     const moveHandler = (e) => {
       const diffX = e.clientX - startX;
       const newWidth = sidebarWidth + diffX;
@@ -402,20 +405,20 @@ const OnboardingForm = () => {
       }
     });
     if (!savedData.rooms || savedData.rooms.length === 0) {
-      savedData.rooms =  [
-      {
-        "Room Name": "",
-        "Room Type": "",
-        "Maximum Occupancy": "",
-        "Total Inventory": "",
-        "Area size (sq.ft)": "",
-        "Bed Type": "",
-        "Connecting/Adjoining Rooms": "",
-        Balcony: "",
-        Windows: "",
-        "Room View": "",
-      },
-    ];
+      savedData.rooms = [
+        {
+          "Room Name": "",
+          "Room Type": "",
+          "Maximum Occupancy": "",
+          "Total Inventory": "",
+          "Area size (sq.ft)": "",
+          "Bed Type": "",
+          "Connecting/Adjoining Rooms": "",
+          Balcony: "",
+          Windows: "",
+          "Room View": "",
+        },
+      ];
     }
     setFormData(savedData);
   }, []);

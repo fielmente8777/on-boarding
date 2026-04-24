@@ -113,7 +113,7 @@ const Login = () => {
 
       const result = (await verify(token)).data;
 
-      console.log(result)
+      console.log(result);
 
       let timerInterval;
       if (result?.status === true) {
@@ -136,20 +136,16 @@ const Login = () => {
             clearInterval(timerInterval);
           },
         });
-        if(result?.onboarding===true){
-          navigate('/thank-you')
-        }else{
+        if (result?.onboarding === true) {
+          navigate("/thank-you");
+        } else {
           navigate("/onboarding/form");
         }
-      }
-      else{
-        
-
+      } else {
       }
 
       // await testprotected(jwtToken);
       // saveToken(jwtToken);
-
 
       return "Login successful";
     } catch (err) {
