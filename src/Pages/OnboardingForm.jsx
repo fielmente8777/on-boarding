@@ -30,10 +30,10 @@ const steps = [
 ];
 
 const OnboardingForm = () => {
-  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [stepTraversed, setStepTraversed] = useState([]);
   const [formData, setFormData] = useState(defaultFormData);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [sidebarWidth, setSidebarWidth] = useState();
   const [completedSteps, setCompletedSteps] = useState(() => {
     const saved = localStorage.getItem("completedSteps");
     return saved ? JSON.parse(saved) : [];
@@ -165,34 +165,34 @@ const OnboardingForm = () => {
   };
 
   const goToNextStep = (roomFormData) => {
-    // let allFieldsEmpty = false;
-    // const currentForm = formData[currentStep.key];
+    let allFieldsEmpty = false;
+    const currentForm = formData[currentStep.key];
 
-    // if (typeof currentForm === "object" && !Array.isArray(currentForm)) {
-    //   allFieldsEmpty = Object.values(currentForm).every(
-    //     (value) =>
-    //       value === undefined ||
-    //       value === null ||
-    //       value.toString().trim() === ""
-    //   );
-    // } else {
-    //   allFieldsEmpty = currentForm.every((item) => {
-    //     if (typeof item === "object" && item !== null) {
-    //       return Object.values(item).every(
-    //         (val) =>
-    //           val === undefined || val === null || val.toString().trim() === ""
-    //       );
-    //     }
-    //     return (
-    //       item === undefined || item === null || item.toString().trim() === ""
-    //     );
-    //   });
-    // }
+    if (typeof currentForm === "object" && !Array.isArray(currentForm)) {
+      allFieldsEmpty = Object.values(currentForm).every(
+        (value) =>
+          value === undefined ||
+          value === null ||
+          value.toString().trim() === ""
+      );
+    } else {
+      allFieldsEmpty = currentForm.every((item) => {
+        if (typeof item === "object" && item !== null) {
+          return Object.values(item).every(
+            (val) =>
+              val === undefined || val === null || val.toString().trim() === ""
+          );
+        }
+        return (
+          item === undefined || item === null || item.toString().trim() === ""
+        );
+      });
+    }
 
-    // if (allFieldsEmpty) {
-    //   alert("Please fill in at least one field before continuing.");
-    //   return;
-    // }
+    if (allFieldsEmpty) {
+      alert("Please fill in at least one field before continuing.");
+      return;
+    }
 
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
@@ -212,7 +212,6 @@ const OnboardingForm = () => {
       setCurrentStepIndex(currentStepIndex - 1);
     }
   };
-
   const renderStepSection = () => {
     switch (currentStep.key) {
       case "propertyDetails":
@@ -229,9 +228,11 @@ const OnboardingForm = () => {
       case "rooms":
         return (
           <RoomOverview
-            formData={formData}
+            formData={{ ...formData, rooms: formData.rooms || [] }}
             setFormData={setFormData}
             handleChange={handleArrayChange}
+            addItem={addItem}
+            removeItem={removeItem}
             goToNextStep={goToNextStep}
             goToPrevStep={goToPrevStep}
             currentStepIndex={currentStepIndex}
@@ -326,46 +327,48 @@ const OnboardingForm = () => {
     }
   };
 
-  const handleFormSubmit = async(e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    try{
-
-      const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+    try {
+      // const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
+      const response = await fetch("http://localhost:8000/api/v1/onboarding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await response.json();
       if (data.status) {
         Swal.fire({
           title: "Success",
-          text: data?.message ?data.message : "Your form has been submitted successfully.",
+          text: data?.message
+            ? data.message
+            : "Your form has been submitted successfully.",
           icon: "success",
           confirmButtonText: "Close",
-        })
-      }
-      else{
+        });
+      } else {
         Swal.fire({
           title: "Error",
-          text: data?.message ?data.message:"You are alreading onboarded with us",
+          text: data?.message
+            ? data.message
+            : "You are alreading onboarded with us",
           icon: "error",
           confirmButtonText: "Close",
-        })
+        });
       }
-    }
-    catch(error){
+    } catch (error) {
       Swal.fire({
-          title: "Error",
-          text: error.message? error.message : "You are alreading onboarded with us",
-          icon: "error",
-          confirmButtonText: "Close",
-        })
+        title: "Error",
+        text: error.message
+          ? error.message
+          : "You are alreading onboarded with us",
+        icon: "error",
+        confirmButtonText: "Close",
+      });
       return;
     }
   };
@@ -394,11 +397,28 @@ const OnboardingForm = () => {
     const savedData = { ...defaultFormData };
     steps.forEach(({ key }) => {
       const local = localStorage.getItem(`form-${key}`);
-      if (local) savedData[key] = JSON.parse(local);
+      if (local) {
+        savedData[key] = JSON.parse(local);
+      }
     });
+    if (!savedData.rooms || savedData.rooms.length === 0) {
+      savedData.rooms =  [
+      {
+        "Room Name": "",
+        "Room Type": "",
+        "Maximum Occupancy": "",
+        "Total Inventory": "",
+        "Area size (sq.ft)": "",
+        "Bed Type": "",
+        "Connecting/Adjoining Rooms": "",
+        Balcony: "",
+        Windows: "",
+        "Room View": "",
+      },
+    ];
+    }
     setFormData(savedData);
   }, []);
-
   return (
     <div className="h-screen">
       {/* <h1 className="text-3xl font-bold mb-4">Hotel Onboarding Form</h1> */}
@@ -433,10 +453,10 @@ const OnboardingForm = () => {
                   isCompleted
                     ? "bg-green-500"
                     : isActive
-                    ? "bg-blue-500"
-                    : isTraversed
-                    ? "bg-blue-500"
-                    : "bg-gray-500"
+                      ? "bg-blue-500"
+                      : isTraversed
+                        ? "bg-blue-500"
+                        : "bg-gray-500"
                 }`}
                   >
                     {isCompleted ? (
@@ -464,10 +484,10 @@ const OnboardingForm = () => {
                 isActive
                   ? "text-blue-300"
                   : isCompleted
-                  ? "text-green-400"
-                  : isTraversed
-                  ? "text-blue-400"
-                  : "text-gray-400"
+                    ? "text-green-400"
+                    : isTraversed
+                      ? "text-blue-400"
+                      : "text-gray-400"
               }`}
                   // onClick={() => {
                   //   if (!step.isDisabled) {
@@ -502,50 +522,50 @@ const OnboardingForm = () => {
           <div>{renderStepSection()}</div>
 
           {/* Navigation Buttons */}
-          {currentStep.key !== "rooms" && (
-            <div className="flex gap-4 items-center">
+          {/* {currentStep.key !== "rooms" && ( */}
+          <div className="flex gap-4 items-center">
+            <button
+              disabled={currentStepIndex === 0}
+              type="button"
+              onClick={goToPrevStep}
+              className={`submit-btn ${
+                currentStepIndex === 0
+                  ? "opacity-50 bg-black"
+                  : "cursor-pointer"
+              }`}
+            >
+              Prev
+            </button>
+
+            {currentStepIndex < steps.length - 1 && (
               <button
-                disabled={currentStepIndex === 0}
                 type="button"
-                onClick={goToPrevStep}
-                className={`submit-btn ${
-                  currentStepIndex === 0
-                    ? "opacity-50 bg-black"
-                    : "cursor-pointer"
-                }`}
+                onClick={goToNextStep}
+                className="submit-btn"
               >
-                Prev
+                Next
               </button>
+            )}
 
-              {currentStepIndex < steps.length - 1 && (
-                <button
-                  type="button"
-                  onClick={goToNextStep}
-                  className="submit-btn"
-                >
-                  Next
-                </button>
-              )}
-
-              {currentStepIndex === steps.length - 1 ? (
-                <button
-                  type="submit"
-                  // onClick={saveStepData}
-                  className="submit-btn"
-                >
-                  Submit
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={saveStepData}
-                  className="submit-btn"
-                >
-                  Save & Next
-                </button>
-              )}
-            </div>
-          )}
+            {currentStepIndex === steps.length - 1 ? (
+              <button
+                type="submit"
+                // onClick={saveStepData}
+                className="submit-btn"
+              >
+                Submit
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={saveStepData}
+                className="submit-btn"
+              >
+                Save & Next
+              </button>
+            )}
+          </div>
+          {/* )} */}
         </form>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { propertyFields } from "../../constants/formInput";
-import { defaultFormData } from "../../constants/formData";
+import { propertyFields } from "../../constats/formInput";
+import { defaultFormData } from "../../constats/formData";
 
 const PropertyDetails = ({ formData, handleChange }) => {
   return (
-    <div className="bg-white">
-      {/* <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+    <div className="max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-md">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Property Details
-      </h2> */}
+      </h2>
 
       <div className="grid grid-cols-2 gap-6">
         {propertyFields.map((field, idx) => {
@@ -20,39 +20,33 @@ const PropertyDetails = ({ formData, handleChange }) => {
               </div>
             );
           }
-
           const value = formData.propertyDetails[field.key] || "";
 
           return (
-            <div
-              key={idx}
-              className={`flex flex-col gap-1 ${
-                field.type === "textarea" ? "col-span-full" : ""
-              }`}
-            >
+            <div key={idx} className="flex flex-col space-y-2">
               <label className="text-gray-700 font-medium">{field.label}</label>
 
               {field.type === "textarea" ? (
                 <textarea
-                  rows={6}
+                  rows={4}
                   value={value}
-                  //   onChange={(e) =>
-                  //     handleChange("propertyDetails", field.key, e.target.value)
-                  //   }
-                  className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
+                     onChange={(e) =>
+                       handleChange("propertyDetails", field.key, e.target.value)
+                     }
+                  className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               ) : field.type === "select" ? (
                 <select
                   value={value}
-                  //   onChange={(e) =>
-                  //     handleChange("propertyDetails", field.key, e.target.value)
-                  //   }
-                  className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
+                    onChange={(e) =>
+                     handleChange("propertyDetails", field.key, e.target.value)
+                   }
+                  className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
                   <option value="">Select</option>
                   {field.options.map((opt) => (
                     <option key={opt} value={opt}>
-                      {opt} Star
+                      {field.key=== "starCategory" ? `${opt} Star` : opt}
                     </option>
                   ))}
                 </select>
@@ -61,10 +55,12 @@ const PropertyDetails = ({ formData, handleChange }) => {
                   type={field.type}
                   step={field.step || undefined}
                   value={value}
+                  minLength={field.minLength}
+                  maxLength={field.maxLength}
                   onChange={(e) =>
                     handleChange("propertyDetails", field.key, e.target.value)
                   }
-                  className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
+                  className="border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
               )}
             </div>

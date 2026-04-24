@@ -1,29 +1,41 @@
 import React, { useState } from "react";
-import { defaultFormData } from "../../constants/formData";
+import { defaultFormData } from "../../constats/formData";
 
-const CompitionHotels = ({ formData, handleChange, addItem, removeItem }) => {
+const CompitionHotels = ({ formData, handleChange }) => {
+  console.log(formData);
   return (
-    <div className="space-y-4">
+    <div>
       {formData.competitionHotels.map((hotel, idx) => (
-        <div key={idx} className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h4 className="font-semibold">Hotel {idx + 1}</h4>
-
-            {idx !== 0 && (
-              <button
-                type="button"
-                className="size-6 rounded-full bg-red-500 text-white"
-                onClick={() => removeItem("competitionHotels", idx)}
-              >
-                X
-              </button>
-            )}
+        <div
+          key={idx}
+          className="form-group"
+          style={{
+            border: "1px solid #ccc",
+            padding: "1rem",
+            marginBottom: "1rem",
+            borderRadius: "6px",
+            backgroundColor: "#f9f9f9",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <h4 style={{ margin: 0 }}>Hotel {idx + 1}</h4>
+            <button
+              type="button"
+              className="delete-btn"
+              //   onClick={() => removeItem("competitionHotels", idx)}
+            >
+              Delete
+            </button>
           </div>
-
           <input
             type="text"
             value={hotel}
-            className="col-span-full w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
             // onChange={(e) => {
             //   const updated = [...formData.competitionHotels];
             //   updated[idx] = e.target.value;
@@ -39,11 +51,9 @@ const CompitionHotels = ({ formData, handleChange, addItem, removeItem }) => {
           />
         </div>
       ))}
-
       <button
         type="button"
         className="add-btn"
-        onClick={() => addItem("competitionHotels", "")}
         // onClick={() =>
         // //   setFormData((prev) => ({
         // //     ...prev,

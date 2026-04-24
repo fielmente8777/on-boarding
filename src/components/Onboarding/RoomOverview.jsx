@@ -1,409 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { defaultFormData } from "../../constants/formData";
+import React, { useState } from "react";
+import { defaultFormData } from "../../constats/formData";
 
-const roomFieldLabels = {
-  roomType: "Room Type",
-  roomName: "Room Name",
-  roomSubheading: "Room Subheading",
-  isWeekendFormat: "Is Weekend Format",
-  changedPrice: "Changed Price",
-  child: "Child",
-  adult: "Adult",
-  noOfRooms: "Number of Rooms",
-  price: "Price",
-  roomFacilities: "Room Facilities e.g AC,Wifi",
-  roomDescription: "Room Description",
-  roomImage: "Room Images",
-};
-
-const roomFieldsInitial = {
-  roomType: "",
-  roomName: "",
-  roomSubheading: "",
-  isWeekendFormat: "",
-  changedPrice: "",
-  child: "",
-  adult: "",
-  noOfRooms: "",
-  price: "",
-  roomFacilities: "",
-  roomDescription: "",
-  roomImage: "",
-};
-
-const RoomOverview = ({
-  formData,
-  setFormData,
-  currentStepIndex,
-  goToNextStep,
-  goToPrevStep,
-  steps,
-  saveStepData,
-  currentStep,
-}) => {
-  // const [roomFormData, setRoomFormData] = useState([
-  //   {
-  //     id: 1,
-  //     roomName: "",
-  //     roomType: "",
-  //     roomSubheading: "",
-  //     isWeekendFormat: "",
-  //     changedPrice: {
-  //       weekend: 0,
-  //       weekday: 0,
-  //     },
-
-  //     child: 0,
-  //     adult: 0,
-  //     noOfRooms: 0,
-  //     price: 0,
-  //     roomFacilities: [],
-  //     roomDescription:
-  //       "Embrace peacefulness and indulge in a serene retreat amidst the serene ambiance of Auroville.",
-  //     roomImage: [],
-  //   },
-  // ]);
-
-  const [roomFormData, setRoomFormData] = useState([]);
-
-  const addRooms = () => {
-    setRoomFormData((prev) => [
-      ...prev,
-      {
-        id: prev.length + 1,
-        ...roomFieldsInitial,
-      },
-    ]);
-  };
-
-  const removeRoom = (roomId) => {
-    setRoomFormData((prev) => prev.filter((room) => room.id !== roomId));
-  };
-
-  const handleInputChange = (event, id) => {
-    const { name, value } = event.target;
-
-    if (name.toLocaleLowerCase() === "roomFacilities".toLocaleLowerCase()) {
-      const allFacilities = value.split(",");
-      const updatedData = roomFormData?.map((room) => {
-        if (room.id === id) {
-          return {
-            ...room,
-            [name]: allFacilities,
-          };
-        }
-        return room;
-      });
-
-      setRoomFormData(updatedData);
-
-      return;
-    }
-
-    const updatedData = roomFormData?.map((room) => {
-      if (room.id === id) {
-        return {
-          ...room,
-          [name]: value,
-        };
-      }
-      return room;
-    });
-    setRoomFormData(updatedData);
-  };
-
-  const handleFileChange = (event, id) => {
-    const files = event.target.files;
-
-    if (files && files.length > 0) {
-      const imageUrls = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        imageUrls.push(file);
-      }
-
-      const updatedData = roomFormData?.map((room) => {
-        if (room.id === id) {
-          return {
-            ...room,
-            roomImage: imageUrls,
-          };
-        }
-        return room;
-      });
-
-      setRoomFormData(updatedData);
-    }
-  };
-
-  const handleRemoveRoomImage = (roomid, idx) => {
-    console.log(idx, roomid);
-    const updatedData = roomFormData?.map((room) => {
-      if (room.id === roomid) {
-        return {
-          ...room,
-          roomImage: room.roomImage.filter((image, index) => index !== idx),
-        };
-      }
-      return room;
-    });
-    setRoomFormData(updatedData);
-  };
-
-  const nextStep = () => {
-    setFormData((prev) => ({ ...prev, rooms: roomFormData }));
-
-    // const isEmpty = Object.values(roomFormData[0]).some(
-    //   (value) => value === "" || value.roomType === ""
-    // );
-
-    // if (isEmpty) {
-    //   alert("Please fill in at least one field before continuing.");
-    //   return;
-    // }
-
-    goToNextStep(roomFormData);
-  };
-
-  const prevStep = () => {
-    setFormData((prev) => ({ ...prev, rooms: roomFormData }));
-    goToPrevStep();
-  };
-
-  useEffect(() => {
-    if (formData.rooms && formData.rooms.length > 0) {
-      setRoomFormData(() => [...formData?.rooms]);
-    } else {
-      setRoomFormData(() => [
-        {
-          id: 1,
-          roomName: "",
-          roomType: "",
-          roomSubheading: "",
-          isWeekendFormat: "",
-          changedPrice: {
-            weekend: 0,
-            weekday: 0,
-          },
-
-          child: 0,
-          adult: 0,
-          noOfRooms: 0,
-          price: 0,
-          roomFacilities: [],
-          roomDescription:
-            "Embrace peacefulness and indulge in a serene retreat amidst the serene ambiance of Auroville.",
-          roomImage: [],
-        },
-      ]);
-    }
-  }, [formData]);
-
+const RoomOverview = ({ formData, handleChange, addItem, removeItem }) => {
   return (
-    <div>
-      <div className="space-y-4">
-        {roomFormData?.map((room, idx) => {
-          return (
-            <div className="">
-              <div className="h-[1.5px] w-full bg-gray-200 my-8 relative">
-                <h2 className="font-semibold text-gray-600 relative left-0 -top-3 bg-gray-200 w-fit px-2 rounded-sm">
-                  Room {idx + 1}
-                </h2>
-                {idx !== 0 && (
-                  <span
-                    className=" cursor-pointer absolute right-0 -top-3 font-bold bg-red-400 text-white size-6 rounded-full flex justify-center items-center"
-                    onClick={() => removeRoom(room.id)}
-                  >
-                    X
-                  </span>
-                )}
-              </div>
-
-              <div className={`grid grid-cols-2 gap-4`}>
-                {Object.keys(room).map((field, idx) => {
-                  if (field === "id") return null;
-
-                  if (field === "roomDescription")
-                    return (
-                      <div key={idx} className="col-span-full">
-                        <textarea
-                          type="text"
-                          rows={6}
-                          placeholder={roomFieldLabels[field]}
-                          className="w-full p-4 outline-none bg-gray-100/60 border  focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
-                        />
-                      </div>
-                    );
-
-                  if (field.toLocaleLowerCase() === "isweekendformat") {
-                    return (
-                      <div key={idx} className="flex gap-4 items-center">
-                        <div className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm">
-                          <select
-                            name={field}
-                            onChange={(e) => handleInputChange(e, room.id)}
-                            className="w-full outline-none h-full"
-                          >
-                            <option>Select / {roomFieldLabels[field]}</option>
-                            <option value={true}>Yes</option>
-                            <option value={false}>No</option>
-                          </select>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  if (
-                    field.toLocaleLowerCase() === "child" ||
-                    field.toLocaleLowerCase() === "adult"
-                  ) {
-                    const length =
-                      field.toLocaleLowerCase() === "child" ? 3 : 5;
-                    return (
-                      <div key={idx} className="flex gap-4 items-center">
-                        <div className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm">
-                          <select
-                            name={field}
-                            className="w-full outline-none h-full"
-                            onChange={(e) => handleInputChange(e, room.id)}
-                          >
-                            <option value="">
-                              Select / {roomFieldLabels[field]}
-                            </option>
-                            {Array.from({ length }, (_, i) => i + 1).map(
-                              (num) => (
-                                <option key={num} value={num}>
-                                  {num}
-                                </option>
-                              )
-                            )}
-                          </select>
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  if (field.toLocaleLowerCase() === "roomimage") {
-                    return (
-                      <div
-                        key={idx}
-                        className="flex gap-4 items-center col-span-full"
-                      >
-                        <div className="w-full">
-                          <input
-                            type="file"
-                            multiple
-                            placeholder={roomFieldLabels[field]}
-                            className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
-                            onChange={(e) => handleFileChange(e, room.id)}
-                          />
-                        </div>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div key={idx} className="flex gap-4 items-center">
-                      <div className="w-full">
-                        <input
-                          type="text"
-                          placeholder={roomFieldLabels[field]}
-                          name={field}
-                          value={room[field]}
-                          className="w-full p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
-                          onChange={(e) => handleInputChange(e, room.id)}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* rooms images preview  */}
-
-              <div>
-                {Array.isArray(room.roomImage) &&
-                  room?.roomImage &&
-                  room?.roomImage?.length > 0 && (
-                    <div className="grid grid-cols-4 gap-4 mt-6">
-                      {room?.roomImage?.map((image, idx) => (
-                        <div
-                          key={idx}
-                          className="flex gap-4 items-cente relative"
-                        >
-                          <div className="w-full">
-                            <img
-                              src={URL.createObjectURL(image)}
-                              alt=""
-                              className="w-full h-52 object-cover p-4 outline-none bg-gray-100/60 border focus:border-slate-500 border-gray-200 rounded-md shadow-sm"
-                            />
-                          </div>
-
-                          <span
-                            className="size-5 absolute -top-1 -right-2 bg-red-500 text-white flex items-center justify-center rounded-full text-xs font-bold cursor-pointer"
-                            onClick={() => handleRemoveRoomImage(room.id, idx)}
-                          >
-                            X
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <button
-        type="button"
-        className="add-btn"
-        // onClick={() => addItem("rooms")}
-        onClick={addRooms}
-      >
-        + Add Room
-      </button>
-
-      <div className="flex gap-4 items-center">
-        <button
-          disabled={currentStepIndex === 0}
-          type="button"
-          onClick={prevStep}
-          className={`submit-btn ${
-            currentStepIndex === 0 ? "opacity-50 bg-black" : "cursor-pointer"
-          }`}
-        >
-          Prev
-        </button>
-
-        {currentStepIndex < steps.length - 1 && (
-          <button type="button" onClick={nextStep} className="submit-btn">
-            Next
-          </button>
-        )}
-
-        {currentStepIndex === steps.length - 1 ? (
-          <button
-            type="submit"
-            // onClick={saveStepData}
-            className="submit-btn"
-          >
-            Submit
-          </button>
-        ) : (
-          <button type="button" onClick={saveStepData} className="submit-btn">
-            Save & Next
-          </button>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default RoomOverview;
-
-/* {roomFormData.map((room, idx) => (
+    <div className="space-y-6">
+      {formData.rooms.map((room, idx) => (
         <div
           key={idx}
           className="room-entry"
@@ -422,6 +23,7 @@ export default RoomOverview;
             }}
           >
             <h3>Room {idx + 1}</h3>
+
             <button
               type="button"
               className="delete-btn"
@@ -438,8 +40,8 @@ export default RoomOverview;
               Delete
             </button>
           </div>
-          {Object.keys(room).map((field, fidx) => {
-            return (
+        
+            {Object.keys(room).map((field, fidx) => (
               <div key={fidx} className="form-group">
                 <label>{field}</label>
                 <input
@@ -450,7 +52,19 @@ export default RoomOverview;
                   }
                 />
               </div>
-            );
-          })}
-        </div>
-      ))} */
+            ))}
+          </div>
+      
+      ))}
+      <button
+        type="button"
+        className="add-btn"
+        onClick={() => addItem("rooms")}
+      >
+        + Add Room
+      </button>
+    </div>
+  );
+};
+
+export default RoomOverview;
