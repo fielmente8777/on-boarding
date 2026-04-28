@@ -16,17 +16,17 @@ import Swal from "sweetalert2";
 
 const steps = [
   { key: "propertyDetails", label: "Property Details", isDisabled: false },
-  { key: "amenities", label: "Amenities", isDisabled: true },
-  { key: "policies", label: "Policies", isDisabled: true },
-  { key: "rooms", label: "Room Overview", isDisabled: true },
-  { key: "competitionHotels", label: "Competition Hotels", isDisabled: true },
-  { key: "importantContacts", label: "Important Contacts", isDisabled: true },
-  { key: "transfers", label: "Transfers", isDisabled: true },
-  { key: "touristInterest", label: "Tourist Interest", isDisabled: true },
-  { key: "cardsAccepted", label: "Cards Accepted", isDisabled: true },
-  { key: "roomFacilities", label: "Room Facilities", isDisabled: true },
-  { key: "ratePlans", label: "Rate Plans", isDisabled: true },
-  { key: "fbOptions", label: "F&B Options", isDisabled: true },
+  // { key: "amenities", label: "Amenities", isDisabled: true },
+  // { key: "policies", label: "Policies", isDisabled: true },
+  // { key: "rooms", label: "Room Overview", isDisabled: true },
+  // { key: "competitionHotels", label: "Competition Hotels", isDisabled: true },
+  // { key: "importantContacts", label: "Important Contacts", isDisabled: true },
+  // { key: "transfers", label: "Transfers", isDisabled: true },
+  // { key: "touristInterest", label: "Tourist Interest", isDisabled: true },
+  // { key: "cardsAccepted", label: "Cards Accepted", isDisabled: true },
+  // { key: "roomFacilities", label: "Room Facilities", isDisabled: true },
+  // { key: "ratePlans", label: "Rate Plans", isDisabled: true },
+  // { key: "fbOptions", label: "F&B Options", isDisabled: true },
 ];
 
 const OnboardingForm = () => {
@@ -173,14 +173,14 @@ const OnboardingForm = () => {
         (value) =>
           value === undefined ||
           value === null ||
-          value.toString().trim() === "",
+          value.toString().trim() === ""
       );
     } else {
       allFieldsEmpty = currentForm.every((item) => {
         if (typeof item === "object" && item !== null) {
           return Object.values(item).every(
             (val) =>
-              val === undefined || val === null || val.toString().trim() === "",
+              val === undefined || val === null || val.toString().trim() === ""
           );
         }
         return (
@@ -207,7 +207,7 @@ const OnboardingForm = () => {
   const goToPrevStep = () => {
     if (currentStepIndex > 0) {
       setStepTraversed((prev) =>
-        prev.filter((step) => step !== currentStep.key),
+        prev.filter((step) => step !== currentStep.key)
       );
       setCurrentStepIndex(currentStepIndex - 1);
     }
@@ -341,9 +341,14 @@ const OnboardingForm = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(formData),
-        },
+        }
       );
       const data = await response.json();
+
+      if (data?.data?.redirect) {
+  window.location.href = data.data.redirect;
+  return;
+}
       if (data.status) {
         Swal.fire({
           title: "Success",
@@ -353,6 +358,12 @@ const OnboardingForm = () => {
           icon: "success",
           confirmButtonText: "Close",
         });
+        
+         setTimeout(() => {
+    window.location.href = "/thank-you";
+  }, 1000);
+
+
       } else {
         Swal.fire({
           title: "Error",
@@ -527,7 +538,7 @@ const OnboardingForm = () => {
           {/* Navigation Buttons */}
           {/* {currentStep.key !== "rooms" && ( */}
           <div className="flex gap-4 items-center">
-            <button
+            {/* <button
               disabled={currentStepIndex === 0}
               type="button"
               onClick={goToPrevStep}
@@ -538,9 +549,9 @@ const OnboardingForm = () => {
               }`}
             >
               Prev
-            </button>
+            </button> */}
 
-            {currentStepIndex < steps.length - 1 && (
+            {/* {currentStepIndex < steps.length - 1 && (
               <button
                 type="button"
                 onClick={goToNextStep}
@@ -548,7 +559,7 @@ const OnboardingForm = () => {
               >
                 Next
               </button>
-            )}
+            )} */}
 
             {currentStepIndex === steps.length - 1 ? (
               <button
@@ -558,7 +569,8 @@ const OnboardingForm = () => {
               >
                 Submit
               </button>
-            ) : (
+            ) 
+            : (
               <button
                 type="button"
                 onClick={saveStepData}
@@ -566,7 +578,8 @@ const OnboardingForm = () => {
               >
                 Save & Next
               </button>
-            )}
+            )
+            }
           </div>
           {/* )} */}
         </form>
