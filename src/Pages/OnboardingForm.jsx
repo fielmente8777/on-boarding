@@ -333,7 +333,7 @@ const OnboardingForm = () => {
     try {
       // const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
       const response = await fetch(
-        "https://gian-1eve.onrender.com/api/v1/onboarding",
+        "http://localhost:8000/api/v1/onboarding",
         {
           method: "POST",
           headers: {
@@ -346,9 +346,9 @@ const OnboardingForm = () => {
       const data = await response.json();
 
       if (data?.data?.redirect) {
-  window.location.href = data.data.redirect;
-  return;
-}
+        window.location.href = data.data.redirect;
+        return;
+      }
       if (data.status) {
         Swal.fire({
           title: "Success",
@@ -359,7 +359,7 @@ const OnboardingForm = () => {
           confirmButtonText: "Close",
         });
         
-         setTimeout(() => {
+        setTimeout(() => {
     window.location.href = "/thank-you";
   }, 1000);
 
@@ -439,10 +439,10 @@ const OnboardingForm = () => {
       <div className="flex h-full">
         {/* Step Navigation Bar */}
         <div
-          style={{
-            width: sidebarWidth,
-          }}
-          className="flex gap-6 bg-slate-800 text-white h-full p-4 relative"
+          // style={{
+          //   width: sidebarWidth,
+          // }}
+          className="flex gap-6 bg-slate-800 text-white h-full p-4 relative w-[300px]"
         >
           <div className="relative flex flex-col items-center gap-7 h-fit">
             {/* Vertical Line */}
@@ -561,7 +561,7 @@ const OnboardingForm = () => {
               </button>
             )} */}
 
-            {currentStepIndex === steps.length - 1 ? (
+            {/* {currentStepIndex === steps.length - 1 ? ( */}
               <button
                 type="submit"
                 // onClick={saveStepData}
@@ -569,7 +569,7 @@ const OnboardingForm = () => {
               >
                 Submit
               </button>
-            ) 
+            {/* ) 
             : (
               <button
                 type="button"
@@ -579,7 +579,7 @@ const OnboardingForm = () => {
                 Save & Next
               </button>
             )
-            }
+            } */}
           </div>
           {/* )} */}
         </form>
