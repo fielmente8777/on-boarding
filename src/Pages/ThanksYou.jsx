@@ -9,7 +9,7 @@ const ThankYou = () => {
 //   useEffect(() => {
 //     const timer = setTimeout(() => {
 //       handleRedirect();
-//     }, 5000);
+//     }, 3000);
 
 //     return () => clearTimeout(timer);
 //   }, []);
@@ -45,7 +45,7 @@ const ThankYou = () => {
 
         {/* Auto redirect hint */}
         <p className="text-xs text-gray-400 mt-4">
-          Redirecting automatically in 5 seconds...
+          Redirecting automatically in 3 seconds...
         </p>
       </div>
     </div>

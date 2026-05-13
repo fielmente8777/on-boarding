@@ -333,7 +333,7 @@ const OnboardingForm = () => {
     try {
       // const response = await fetch("https://nexon.eazotel.com/eazotel/onboarding/add-new-client",
       const response = await fetch(
-        "http://localhost:8000/api/v1/onboarding",
+        "https://gian-1eve.onrender.com/api/v1/onboarding",
         {
           method: "POST",
           headers: {
@@ -344,36 +344,64 @@ const OnboardingForm = () => {
         }
       );
       const data = await response.json();
-
-      if (data?.data?.redirect) {
-        window.location.href = data.data.redirect;
-        return;
-      }
-      if (data.status) {
+      if (data.responseStatusCode === 409) {
         Swal.fire({
-          title: "Success",
-          text: data?.message
-            ? data.message
-            : "Your form has been submitted successfully.",
-          icon: "success",
-          confirmButtonText: "Close",
+          title: "Warning",
+          text: data?.responseMessage
+            ? data.responseMessage
+            : "You are already onboarding with us!",
+          icon: "warning",
+          confirmButtonText: "Redirect to login",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "https://dashboard.eazotel.com/login";
+          }
         });
-        
-        setTimeout(() => {
-    window.location.href = "/thank-you";
-  }, 1000);
 
-
-      } else {
+      }else if(data.success===false){
         Swal.fire({
           title: "Error",
           text: data?.message
             ? data.message
-            : "You are alreading onboarded with us",
+            : "Something went wrong!",
           icon: "error",
           confirmButtonText: "Close",
         });
       }
+      else{
+        window.location.href = "/thank-you";
+      }
+
+      console.log("Data", data.responseStatusCode)
+      // if (data?.data?.redirect) {
+      //   window.location.href = data.data.redirect;
+      //   return;
+      // }
+      // if (data.status) {
+      //   Swal.fire({
+      //     title: "Success",
+      //     text: data?.message
+      //       ? data.message
+      //       : "Your form has been submitted successfully.",
+      //     icon: "success",
+      //     confirmButtonText: "Close",
+      //   });
+
+      //   setTimeout(() => {
+      //     window.location.href = "/thank-you";
+      //   }, 1000);
+
+
+      // } else {
+      //   Swal.fire({
+      //     title: "Error",
+      //     text: data?.message
+      //       ? data.message
+      //       : "You are alreading onboarded with us",
+      //     icon: "error",
+      //     confirmButtonText: "Close",
+      //   });
+      // }
     } catch (error) {
       Swal.fire({
         title: "Error",
@@ -381,7 +409,7 @@ const OnboardingForm = () => {
           ? error.message
           : "You are alreading onboarded with us",
         icon: "error",
-        confirmButtonText: "Close",
+        confirmButtonText: "Login",
       });
       return;
     }
@@ -456,22 +484,20 @@ const OnboardingForm = () => {
               return (
                 <div
                   key={step.key}
-                  className={`relative z-10 flex items-center gap-4 cursor-pointer group ${
-                    step.isDisabled ? "" : ""
-                  }`}
+                  className={`relative z-10 flex items-center gap-4 cursor-pointer group ${step.isDisabled ? "" : ""
+                    }`}
                 >
                   {/* Circle */}
                   <div
                     className={`size-7 rounded-full flex items-center justify-center transition-all duration-300
-                ${
-                  isCompleted
-                    ? "bg-green-500"
-                    : isActive
-                      ? "bg-blue-500"
-                      : isTraversed
-                        ? "bg-blue-500"
-                        : "bg-gray-500"
-                }`}
+                ${isCompleted
+                        ? "bg-green-500"
+                        : isActive
+                          ? "bg-blue-500"
+                          : isTraversed
+                            ? "bg-blue-500"
+                            : "bg-gray-500"
+                      }`}
                   >
                     {isCompleted ? (
                       <span className="text-sm font-bold">✓</span>
@@ -494,21 +520,20 @@ const OnboardingForm = () => {
                 <div
                   key={step.key}
                   className={`transition-all duration-200 font-medium cursor-pointer
-              ${
-                isActive
-                  ? "text-blue-300"
-                  : isCompleted
-                    ? "text-green-400"
-                    : isTraversed
-                      ? "text-blue-400"
-                      : "text-gray-400"
-              }`}
-                  // onClick={() => {
-                  //   if (!step.isDisabled) {
-                  //     // setStepTraversed([...stepTraversed, index]);
-                  //     // setCurrentStepIndex(index);
-                  //   }
-                  // }}
+              ${isActive
+                      ? "text-blue-300"
+                      : isCompleted
+                        ? "text-green-400"
+                        : isTraversed
+                          ? "text-blue-400"
+                          : "text-gray-400"
+                    }`}
+                // onClick={() => {
+                //   if (!step.isDisabled) {
+                //     // setStepTraversed([...stepTraversed, index]);
+                //     // setCurrentStepIndex(index);
+                //   }
+                // }}
                 >
                   {step.label}
                 </div>
@@ -519,7 +544,7 @@ const OnboardingForm = () => {
           <div
             className="bg-white w-2 h-full absolute right-0 top-0 cursor-w-resize"
             onMouseDown={handleResize}
-            // onDoubleClick={handleResize}
+          // onDoubleClick={handleResize}
           />
         </div>
 
@@ -562,13 +587,13 @@ const OnboardingForm = () => {
             )} */}
 
             {/* {currentStepIndex === steps.length - 1 ? ( */}
-              <button
-                type="submit"
-                // onClick={saveStepData}
-                className="submit-btn"
-              >
-                Submit
-              </button>
+            <button
+              type="submit"
+              // onClick={saveStepData}
+              className="submit-btn"
+            >
+              Submit
+            </button>
             {/* ) 
             : (
               <button

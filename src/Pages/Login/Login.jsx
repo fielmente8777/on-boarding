@@ -216,7 +216,8 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="rounded-2xl max-w-xl w-full mx-auto flex-1 flex flex-col justify-center">
+          <div className="rounded-2xl max-w-xl w-full mx-auto flex-1 flex flex-col justify-center border">
+           
             <div>
               <div className="max-w-60 mx-auto aspect-[3/1]">
                 <img
@@ -257,6 +258,8 @@ const Login = () => {
                 </div>
               </div>
             </form>
+
+            <p className="text-md text-center mt-10">Already a member ? <Link to="https://dashboard.eazotel.com" target="_blank" className="text-blue-500">Log in</Link></p>
           </div>
 
           <div
