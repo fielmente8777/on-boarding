@@ -1,88 +1,152 @@
 import React from "react";
-import { propertyFields } from "../../constats/formInput";
+import { propertySections } from "../../constats/formInput";
+import CountryCodePicker from "./CountryCodePicker";
 
-const PropertyDetails = ({ formData, handleChange }) => {
+const inputClass = (hasError) =>
+  `w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-gray-800 shadow-sm outline-none transition placeholder:text-gray-400 focus:ring-2 ${
+    hasError
+      ? "border-red-400 focus:border-red-500 focus:ring-red-100"
+      : "border-gray-200 focus:border-[#0A3A75] focus:ring-[#0A3A75]/10"
+  }`;
+
+const PropertyDetails = ({
+  formData,
+  handleChange,
+  errors = {},
+  autofilled = new Set(),
+}) => {
+  const values = formData.propertyDetails || {};
+
+  const renderField = (field) => {
+    const value = values[field.key] ?? "";
+    const error = errors[field.key];
+    const onChange = (e) =>
+      handleChange("propertyDetails", field.key, e.target.value);
+
+    let control;
+    if (field.type === "textarea") {
+      control = (
+        <textarea
+          id={field.key}
+          rows={4}
+          value={value}
+          placeholder={field.placeholder}
+          onChange={onChange}
+          className={inputClass(error)}
+        />
+      );
+    } else if (field.key === "hotelPhone") {
+      control = (
+        <div className="flex gap-2">
+          <CountryCodePicker
+            code={values.hotelPhoneCode}
+            iso3={values.hotelPhoneIso}
+            onChange={(c) => {
+              handleChange("propertyDetails", "hotelPhoneCode", c.code);
+              handleChange("propertyDetails", "hotelPhoneIso", c.iso3);
+            }}
+          />
+          <input
+            id={field.key}
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            value={value}
+            placeholder={field.placeholder}
+            onChange={(e) =>
+              handleChange(
+                "propertyDetails",
+                field.key,
+                e.target.value.replace(/[^\d ]/g, ""),
+              )
+            }
+            className={inputClass(error)}
+          />
+        </div>
+      );
+    } else if (field.type === "select") {
+      control = (
+        <select
+          id={field.key}
+          value={value}
+          onChange={onChange}
+          className={inputClass(error)}
+        >
+          <option value="">Select</option>
+          {field.options.map((opt) => (
+            <option key={opt} value={opt}>
+              {field.optionLabel ? field.optionLabel(opt) : opt}
+            </option>
+          ))}
+        </select>
+      );
+    } else {
+      control = (
+        <input
+          id={field.key}
+          type={field.type}
+          step={field.step}
+          value={value}
+          placeholder={field.placeholder}
+          onChange={onChange}
+          className={inputClass(error)}
+        />
+      );
+    }
+
+    return (
+      <div
+        key={field.key}
+        className={`flex flex-col gap-1.5 ${field.full ? "md:col-span-2" : ""}`}
+      >
+        <label
+          htmlFor={field.key}
+          className="text-sm font-medium text-gray-700"
+        >
+          {field.label}
+          {field.required && <span className="ml-0.5 text-[#fc5f07]">*</span>}
+          {autofilled.has(field.key) && (
+            <span className="ml-2 rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+              From Google
+            </span>
+          )}
+        </label>
+        {control}
+        {error && <p className="text-xs text-red-500">{error}</p>}
+      </div>
+    );
+  };
+
   return (
-    <div className="p-6 md:p-10 bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100">
-      
-      {/* Header */}
-      {/* <div className="mb-8">
-        <h2 className="text-3xl font-bold text-gray-800">
-          Property Details
-        </h2>
-        <p className="text-gray-500 mt-1 text-sm">
-          Fill in the details about your property
-        </p>
-      </div> */}
-
-      {/* Form Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {propertyFields.map((field, idx) => {
-          if (field.group) {
-            return (
-              <div key={idx} className="col-span-1 md:col-span-2 mt-4">
-                <h3 className="text-lg font-semibold text-gray-700 border-l-4 border-blue-500 pl-3">
-                  {field.group}
-                </h3>
-              </div>
-            );
-          }
-
-          const value = formData.propertyDetails[field.key] || "";
-
-          return (
-            <div key={idx} className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-600">
-                {field.label}
-              </label>
-
-              {/* TEXTAREA */}
-              {field.type === "textarea" ? (
-                <textarea
-                  rows={4}
-                  value={value}
-                  onChange={(e) =>
-                    handleChange("propertyDetails", field.key, e.target.value)
-                  }
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm shadow-sm 
-                  focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition"
-                />
-              ) : field.type === "select" ? (
-                /* SELECT */
-                <select
-                  value={value}
-                  onChange={(e) =>
-                    handleChange("propertyDetails", field.key, e.target.value)
-                  }
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm shadow-sm 
-                  focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition"
-                >
-                  <option value="">Select</option>
-                  {field.options.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {field.key === "starCategory" ? `${opt} Star` : opt}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                /* INPUT */
-                <input
-                  type={field.type}
-                  step={field.step || undefined}
-                  value={value}
-                  minLength={field.minLength}
-                  maxLength={field.maxLength}
-                  onChange={(e) =>
-                    handleChange("propertyDetails", field.key, e.target.value)
-                  }
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm shadow-sm 
-                  focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition"
-                />
+    <div className="space-y-6">
+      {propertySections.map((section) => (
+        <section
+          key={section.title}
+          id={`section-${section.title}`}
+          className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm md:p-7"
+        >
+          <div className="mb-5 flex items-start justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-semibold text-[#0A3A75]">
+                {section.title}
+              </h3>
+              {section.description && (
+                <p className="mt-0.5 text-sm text-gray-500">
+                  {section.description}
+                </p>
               )}
             </div>
-          );
-        })}
-      </div>
+            {section.optional && (
+              <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-gray-500">
+                Optional
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {section.fields.map(renderField)}
+          </div>
+        </section>
+      ))}
     </div>
   );
 };

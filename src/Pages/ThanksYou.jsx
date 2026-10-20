@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 const ThankYou = () => {
   const handleRedirect = () => {
@@ -32,7 +32,7 @@ const ThankYou = () => {
         </p>
 
         <p className="text-gray-500 text-sm mb-6">
-          Your account is being set up. You can now access your dashboard.
+          Your website and dashboard are ready. Log in to start managing your property.
         </p>
 
         {/* Button */}
@@ -43,10 +43,6 @@ const ThankYou = () => {
           Go to Dashboard
         </button>
 
-        {/* Auto redirect hint */}
-        <p className="text-xs text-gray-400 mt-4">
-          Redirecting automatically in 3 seconds...
-        </p>
       </div>
     </div>
   );
